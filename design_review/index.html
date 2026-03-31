@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forever Free — Design Review</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&family=Outfit:wght@400;600&family=DM+Sans:opsz,wght@9..40,400;9..40,600&family=Sora:wght@400;600&family=Nunito:wght@600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #F2F4F7;
+      font-family: system-ui, sans-serif;
+      padding: 40px 48px 60px;
+      color: #1a1a1a;
+    }
+
+    h1 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 32px;
+    }
+
+    /* ── Section header ─────────────────────────────────────────── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin: 48px 0 16px;
+    }
+    .section-label:first-of-type { margin-top: 0; }
+
+    /* ── Logo row ────────────────────────────────────────────────── */
+    .logo-row {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    .logo-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      letter-spacing: 0.04em;
+    }
+
+    /* logo at three sizes */
+    .logo-sizes {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .logo-sizes svg { display: block; border-radius: inherit; }
+    .size-label {
+      font-size: 10px;
+      color: #bbb;
+      text-align: center;
+      margin-top: 6px;
+    }
+    .logo-size-wrap { display: flex; flex-direction: column; align-items: center; }
+
+    /* ── Font comparison ─────────────────────────────────────────── */
+    .font-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .font-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .font-label-col {
+      width: 160px;
+      flex-shrink: 0;
+    }
+    .font-label-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+    }
+    .font-label-note {
+      font-size: 11px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    /* Phone chrome wrapper */
+    .phone-bar {
+      flex: 1;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    }
+
+    /* Fake status bar */
+    .status-bar {
+      background: #174e65;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 16px;
+    }
+    .status-bar span {
+      font-size: 10px;
+      color: rgba(255,255,255,0.85);
+      font-family: system-ui;
+      font-weight: 600;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+
+    /* App bar */
+    .app-bar {
+      background: #1B5E7B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+    }
+    .app-bar-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+    .app-bar-icon {
+      width: 24px;
+      height: 24px;
+      opacity: 0.9;
+    }
+
+    /* Bottom preview strip */
+    .screen-preview {
+      background: #fafafa;
+      padding: 14px 20px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .preview-line {
+      height: 10px;
+      border-radius: 5px;
+      background: #e0e0e0;
+    }
+
+    .f-plus-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .f-outfit        { font-family: 'Outfit', sans-serif; }
+    .f-dm-sans       { font-family: 'DM Sans', sans-serif; }
+    .f-sora          { font-family: 'Sora', sans-serif; }
+    .f-nunito        { font-family: 'Nunito', sans-serif; }
+
+    .current-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #e8f4fb;
+      color: #1B5E7B;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 48px 0 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Forever Free — Design Review</h1>
+
+  <!-- ── LOGOS ─────────────────────────────────────────────────── -->
+  <div class="section-label">Logo Concepts</div>
+
+  <div class="logo-row">
+
+    <!-- Concept A: Signal Tower -->
+    <div class="logo-card">
+      <div class="logo-name">A — Signal Tower</div>
+      <div class="logo-sizes">
+
+        <div class="logo-size-wrap">
+          <!-- 192px -->
+          <svg width="192" height="192" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius:42px">
+            <rect width="512" height="512" rx="0" fill="#1B5E7B"/>
+            <!-- Outer arc -->
+            <path d="M 62 348 A 194 194 0 0 1 450 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <!-- Middle arc -->
+            <path d="M 122 348 A 134 134 0 0 1 390 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <!-- Inner arc -->
+            <path d="M 186 348 A 70 70 0 0 1 326 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <!-- Center dot -->
+            <circle cx="256" cy="348" r="26" fill="white"/>
+          </svg>
+          <div class="size-label">192px</div>
+        </div>
+
+        <div class="logo-size-wrap">
+          <!-- 72px -->
+          <svg width="72" height="72" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius:16px">
+            <rect width="512" height="512" fill="#1B5E7B"/>
+            <path d="M 62 348 A 194 194 0 0 1 450 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <path d="M 122 348 A 134 134 0 0 1 390 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <path d="M 186 348 A 70 70 0 0 1 326 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <circle cx="256" cy="348" r="26" fill="white"/>
+          </svg>
+          <div class="size-label">72px</div>
+        </div>
+
+        <div class="logo-size-wrap">
+          <!-- 32px -->
+          <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius:7px">
+            <rect width="512" height="512" fill="#1B5E7B"/>
+            <path d="M 62 348 A 194 194 0 0 1 450 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <path d="M 122 348 A 134 134 0 0 1 390 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <path d="M 186 348 A 70 70 0 0 1 326 348"
+                  stroke="#F4A726" stroke-width="34" fill="none" stroke-linecap="round"/>
+            <circle cx="256" cy="348" r="26" fill="white"/>
+          </svg>
+          <div class="size-label">32px</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Concept E: A→Alpha Stack -->
+    <div class="logo-card">
+      <div class="logo-name">E — A → Alpha</div>
+      <div class="logo-sizes">
+
+        <div class="logo-size-wrap">
+          <!-- 192px -->
+          <svg width="192" height="192" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius:42px">
+            <rect width="512" height="512" fill="#1B5E7B"/>
+            <!-- Large amber "A" -->
+            <text x="256" y="210"
+                  font-family="Arial Black, Impact, sans-serif"
+                  font-size="236"
+                  font-weight="900"
+                  fill="#F4A726"
+                  text-anchor="middle"
+                  dominant-baseline="central">A</text>
+            <!-- Thin amber separator line -->
+            <line x1="88" y1="302" x2="424" y2="302"
+                  stroke="#F4A726" stroke-width="3" opacity="0.45"/>
+            <!-- White "— Alpha" -->
+            <text x="256" y="390"
+                  font-family="Arial, Helvetica, sans-serif"
+                  font-size="74"
+                  font-weight="700"
+                  fill="white"
+                  text-anchor="middle"
+                  dominant-baseline="central">— Alpha</text>
+          </svg>
+          <div class="size-label">192px</div>
+        </div>
+
+        <div class="logo-size-wrap">
+          <!-- 72px -->
+          <svg width="72" height="72" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius:16px">
+            <rect width="512" height="512" fill="#1B5E7B"/>
+            <text x="256" y="210"
+                  font-family="Arial Black, Impact, sans-serif"
+                  font-size="236" font-weight="900"
+                  fill="#F4A726" text-anchor="middle" dominant-baseline="central">A</text>
+            <line x1="88" y1="302" x2="424" y2="302"
+                  stroke="#F4A726" stroke-width="3" opacity="0.45"/>
+            <text x="256" y="390"
+                  font-family="Arial, Helvetica, sans-serif"
+                  font-size="74" font-weight="700"
+                  fill="white" text-anchor="middle" dominant-baseline="central">— Alpha</text>
+          </svg>
+          <div class="size-label">72px</div>
+        </div>
+
+        <div class="logo-size-wrap">
+          <!-- 32px -->
+          <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius:7px">
+            <rect width="512" height="512" fill="#1B5E7B"/>
+            <text x="256" y="210"
+                  font-family="Arial Black, Impact, sans-serif"
+                  font-size="236" font-weight="900"
+                  fill="#F4A726" text-anchor="middle" dominant-baseline="central">A</text>
+            <line x1="88" y1="302" x2="424" y2="302"
+                  stroke="#F4A726" stroke-width="3" opacity="0.45"/>
+            <text x="256" y="390"
+                  font-family="Arial, Helvetica, sans-serif"
+                  font-size="74" font-weight="700"
+                  fill="white" text-anchor="middle" dominant-baseline="central">— Alpha</text>
+          </svg>
+          <div class="size-label">32px</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.logo-row -->
+
+  <hr class="divider">
+
+  <!-- ── FONT COMPARISON ───────────────────────────────────────── -->
+  <div class="section-label" style="margin-top:40px">App Bar Font — "Forever Free: NATO Alphabet"</div>
+
+  <div class="font-bars">
+
+    <!-- Current: Nunito -->
+    <div class="font-row">
+      <div class="font-label-col">
+        <div class="font-label-name">Nunito <span class="current-badge">current</span></div>
+        <div class="font-label-note">Rounded, friendly</div>
+      </div>
+      <div class="phone-bar">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <span>●●●● ▲ 🔋</span>
+          </div>
+        </div>
+        <div class="app-bar">
+          <span class="app-bar-title f-nunito">Forever Free: NATO Alphabet</span>
+          <svg class="app-bar-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/><line x1="12" y1="11" x2="12" y2="17"/>
+          </svg>
+        </div>
+        <div class="screen-preview">
+          <div class="preview-line" style="width:32px; background:#c8dde8"></div>
+          <div class="preview-line" style="width:160px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plus Jakarta Sans -->
+    <div class="font-row">
+      <div class="font-label-col">
+        <div class="font-label-name">Plus Jakarta Sans</div>
+        <div class="font-label-note">Geometric, polished</div>
+      </div>
+      <div class="phone-bar">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●● ▲ 🔋</span></div>
+        </div>
+        <div class="app-bar">
+          <span class="app-bar-title f-plus-jakarta">Forever Free: NATO Alphabet</span>
+          <svg class="app-bar-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/><line x1="12" y1="11" x2="12" y2="17"/>
+          </svg>
+        </div>
+        <div class="screen-preview">
+          <div class="preview-line" style="width:32px; background:#c8dde8"></div>
+          <div class="preview-line" style="width:160px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outfit -->
+    <div class="font-row">
+      <div class="font-label-col">
+        <div class="font-label-name">Outfit</div>
+        <div class="font-label-note">Airy, contemporary</div>
+      </div>
+      <div class="phone-bar">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●● ▲ 🔋</span></div>
+        </div>
+        <div class="app-bar">
+          <span class="app-bar-title f-outfit">Forever Free: NATO Alphabet</span>
+          <svg class="app-bar-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/><line x1="12" y1="11" x2="12" y2="17"/>
+          </svg>
+        </div>
+        <div class="screen-preview">
+          <div class="preview-line" style="width:32px; background:#c8dde8"></div>
+          <div class="preview-line" style="width:160px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DM Sans -->
+    <div class="font-row">
+      <div class="font-label-col">
+        <div class="font-label-name">DM Sans</div>
+        <div class="font-label-note">Neutral, high legibility</div>
+      </div>
+      <div class="phone-bar">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●● ▲ 🔋</span></div>
+        </div>
+        <div class="app-bar">
+          <span class="app-bar-title f-dm-sans">Forever Free: NATO Alphabet</span>
+          <svg class="app-bar-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/><line x1="12" y1="11" x2="12" y2="17"/>
+          </svg>
+        </div>
+        <div class="screen-preview">
+          <div class="preview-line" style="width:32px; background:#c8dde8"></div>
+          <div class="preview-line" style="width:160px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sora -->
+    <div class="font-row">
+      <div class="font-label-col">
+        <div class="font-label-name">Sora</div>
+        <div class="font-label-note">Geometric + subtle character</div>
+      </div>
+      <div class="phone-bar">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons"><span>●●●● ▲ 🔋</span></div>
+        </div>
+        <div class="app-bar">
+          <span class="app-bar-title f-sora">Forever Free: NATO Alphabet</span>
+          <svg class="app-bar-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/><line x1="12" y1="11" x2="12" y2="17"/>
+          </svg>
+        </div>
+        <div class="screen-preview">
+          <div class="preview-line" style="width:32px; background:#c8dde8"></div>
+          <div class="preview-line" style="width:160px"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.font-bars -->
+
+</body>
+</html>

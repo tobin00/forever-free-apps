@@ -1,0 +1,77 @@
+# =============================================================================
+# SECRETS — NEVER COMMIT THESE
+# =============================================================================
+*.jks
+*.keystore
+**/key.properties
+*.p12
+*.mobileprovision
+*-service-account.json
+*_base64.txt
+
+# =============================================================================
+# FLUTTER / DART
+# =============================================================================
+# Build outputs
+**/build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Pub cache
+.pub-cache/
+.pub/
+
+# Generated files (we don't use code generation, but just in case)
+*.g.dart
+*.freezed.dart
+
+# Coverage
+coverage/
+
+# =============================================================================
+# ANDROID
+# =============================================================================
+**/android/.gradle/
+**/android/local.properties
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/gradle/
+# Note: key.properties is already covered above
+
+# =============================================================================
+# IOS (for when we get there)
+# =============================================================================
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Runner.xcworkspace/xcshareddata/
+**/ios/Flutter/ephemeral/
+
+# =============================================================================
+# IDE & LOCAL TOOLS
+# =============================================================================
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.code-workspace
+.claude/settings.local.json
+
+# =============================================================================
+# OS
+# =============================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =============================================================================
+# FASTLANE (for when we use it)
+# =============================================================================
+**/fastlane/report.xml
+**/fastlane/README.md
+**/fastlane/Appfile
