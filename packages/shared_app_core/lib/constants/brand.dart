@@ -28,7 +28,7 @@ class Brand {
 
   // ── Shared UI strings ──────────────────────────────────────────────────────
 
-  static const String donationUrl = 'https://foreverfreeapps.com/donate';
+  static const String donationUrl = 'https://ko-fi.com/foreverfreeapps';
   static const String donationButtonLabel = 'Support These Apps';
 
   static const String madeWithCare = 'Made with care \u2665';
