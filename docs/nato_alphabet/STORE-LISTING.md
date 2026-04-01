@@ -4,7 +4,7 @@
 
 ## Google Play Store
 
-**App name:** NATO Alphabet Trainer
+**App name:** NATO Phonetic Alphabet Trainer
 
 **Short description:**
 > Learn the NATO phonetic alphabet — free, no ads, works offline.
