@@ -1,0 +1,114 @@
+workflows:
+  # ============================
+  # NATO Alphabet - Android
+  # ============================
+  nato-alphabet-android:
+    name: NATO Alphabet - Android
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+
+    environment:
+      flutter: stable
+      java: 17
+      groups:
+        - android_credentials    # Keystore + Play Store creds
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+      path_patterns:
+        - pattern: 'apps/nato_alphabet/**'
+          include: true
+        - pattern: 'packages/shared_app_core/**'
+          include: true
+
+    scripts:
+      # Navigate to the app directory
+      - name: Set working directory
+        script: |
+          echo "APP_DIR=$CM_BUILD_DIR/apps/nato_alphabet" >> $CM_ENV
+
+      # Get dependencies for shared package first
+      - name: Get shared package dependencies
+        script: |
+          cd $CM_BUILD_DIR/packages/shared_app_core
+          flutter pub get
+
+      # Get app dependencies
+      - name: Get app dependencies
+        script: |
+          cd $APP_DIR
+          flutter pub get
+
+      # Static analysis
+      - name: Analyze
+        script: |
+          cd $APP_DIR
+          flutter analyze --no-fatal-infos
+
+      # Run unit and widget tests (integration tests run locally, not in CI)
+      - name: Run unit and widget tests
+        script: |
+          cd $APP_DIR
+          flutter test --coverage
+
+      # Set up Android signing
+      - name: Set up Android signing
+        script: |
+          cd $APP_DIR
+          echo $CM_KEYSTORE | base64 --decode > $CM_BUILD_DIR/keystore.jks
+          cat > android/key.properties <<EOF
+          storeFile=$CM_BUILD_DIR/keystore.jks
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          keyPassword=$CM_KEY_PASSWORD
+          EOF
+
+      # Build release AAB (Android App Bundle)
+      - name: Build Android App Bundle
+        script: |
+          cd $APP_DIR
+          flutter build appbundle --release \
+            --build-number=$PROJECT_BUILD_NUMBER
+
+    artifacts:
+      - apps/nato_alphabet/build/**/outputs/**/*.aab
+      - apps/nato_alphabet/build/**/outputs/**/mapping.txt
+
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal    # Start with internal testing track
+        submit_as_draft: true
+
+  # ============================
+  # NATO Alphabet - iOS (DEFERRED)
+  # ============================
+  # Uncomment and configure when ready for iOS
+  #
+  # nato-alphabet-ios:
+  #   name: NATO Alphabet - iOS
+  #   max_build_duration: 30
+  #   instance_type: mac_mini_m2
+  #   environment:
+  #     flutter: stable
+  #     xcode: latest
+  #     cocoapods: default
+  #     groups:
+  #       - ios_credentials
+  #   scripts:
+  #     - name: Set up iOS signing
+  #       script: |
+  #         # iOS signing setup goes here
+  #     - name: Build iOS
+  #       script: |
+  #         cd apps/nato_alphabet
+  #         flutter build ipa --release
+  #   artifacts:
+  #     - apps/nato_alphabet/build/ios/ipa/*.ipa
+  #   publishing:
+  #     app_store_connect:
+  #       auth: integration
