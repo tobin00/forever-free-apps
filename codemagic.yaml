@@ -19,11 +19,8 @@ workflows:
       branch_patterns:
         - pattern: 'main'
           include: true
-      path_patterns:
-        - pattern: 'apps/nato_alphabet/**'
-          include: true
-        - pattern: 'packages/shared_app_core/**'
-          include: true
+      # Note: path_patterns is not supported by Codemagic.
+      # With a single app in the repo, every push to main triggers this workflow.
 
     scripts:
       # Navigate to the app directory
