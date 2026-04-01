@@ -9,9 +9,9 @@
 ## Current Status
 
 - ✅ **Phase 1–5 COMPLETE:** App is built, tested, and approved.
-- ⬜ Phase 6: Git & GitHub setup
-- ⬜ Phase 7: Android signing
-- ⬜ Phase 8: CI/CD pipeline (Codemagic)
+- ✅ **Phase 6 COMPLETE:** Code on GitHub, no secrets committed.
+- ✅ **Phase 7 COMPLETE:** Keystore generated, backed up, release build verified.
+- 🔄 **Phase 8 IN PROGRESS:** codemagic.yaml created and pushed. Awaiting Codemagic account setup.
 - ⬜ Phase 9: Store preparation
 - ⬜ Phase 10: First release to internal testing
 - ⬜ Phase 11: Promote to production (Android)
@@ -25,14 +25,14 @@
 **Goal:** Code is in a private GitHub repository with no secrets committed. App history is clean.
 
 ### Step 6.1 — Pre-flight: Verify no secrets in code (AI does this)
-- [ ] Run `flutter analyze` in `apps/nato_alphabet/` — confirm zero errors
-- [ ] Run `flutter test` in `apps/nato_alphabet/` — confirm all tests pass
-- [ ] Run `flutter test integration_test/` locally in `apps/nato_alphabet/` — confirm passes
-- [ ] Verify no `.jks`, `key.properties`, or JSON credential files exist anywhere in the project
+- [x] Run `flutter analyze` in `apps/nato_alphabet/` — confirm zero errors
+- [x] Run `flutter test` in `apps/nato_alphabet/` — confirm all tests pass
+- [x] Run `flutter test integration_test/` locally in `apps/nato_alphabet/` — confirm passes
+- [x] Verify no `.jks`, `key.properties`, or JSON credential files exist anywhere in the project
 
 ### Step 6.2 — Create `.gitignore` (AI does this)
-- [ ] Create `.gitignore` at the repo root with all entries from `docs/templates/05-SIGNING-AND-SECRETS.md`
-- [ ] Confirm the following are covered:
+- [x] Create `.gitignore` at the repo root with all entries from `docs/templates/05-SIGNING-AND-SECRETS.md`
+- [x] Confirm the following are covered:
   - `*.jks` and `*.keystore`
   - `**/key.properties`
   - `*.p12` and `*.mobileprovision`
@@ -41,25 +41,25 @@
   - IDE files (`.idea/`, `*.iml`)
 
 ### Step 6.3 — Initialize git (AI walks user through this)
-- [ ] Run `git init` in the project root
-- [ ] Run `git add .`
-- [ ] Run `git status` — review the file list together to confirm no secrets are staged
-- [ ] Run `git commit -m "Initial commit: Forever Free NATO Alphabet v1.0.0"`
+- [x] Run `git init` in the project root
+- [x] Run `git add .`
+- [x] Run `git status` — review the file list together to confirm no secrets are staged
+- [x] Run `git commit -m "Initial commit: Forever Free NATO Alphabet v1.0.0"`
 
 ### Step 6.4 — Create GitHub repository (USER does this, with AI guidance)
-- [ ] Go to https://github.com/new
-- [ ] Repository name: `forever-free-apps` (this is the monorepo for all apps)
-- [ ] Visibility: **Private** (very important — keeps keystore setup safe)
-- [ ] Do NOT check "Initialize with README" — we already have files
-- [ ] Do NOT add .gitignore or license — we have our own
-- [ ] Click "Create repository"
-- [ ] Copy the repository URL (format: `https://github.com/YOUR_USERNAME/forever-free-apps.git`)
+- [x] Go to https://github.com/new
+- [x] Repository name: `forever-free-apps` (this is the monorepo for all apps)
+- [x] Visibility: **Private** (very important — keeps keystore setup safe)
+- [x] Do NOT check "Initialize with README" — we already have files
+- [x] Do NOT add .gitignore or license — we have our own
+- [x] Click "Create repository"
+- [x] Copy the repository URL (format: `https://github.com/YOUR_USERNAME/forever-free-apps.git`)
 
 ### Step 6.5 — Connect local repo to GitHub (AI provides commands, user runs them)
-- [ ] `git remote add origin https://github.com/YOUR_USERNAME/forever-free-apps.git`
-- [ ] `git branch -M main`
-- [ ] `git push -u origin main`
-- [ ] Verify: visit the GitHub URL in browser — all files should be visible
+- [x] `git remote add origin https://github.com/YOUR_USERNAME/forever-free-apps.git`
+- [x] `git branch -M main`
+- [x] `git push -u origin main`
+- [x] Verify: visit the GitHub URL in browser — all files should be visible
 
 ### ✅ Phase 6 Success Condition
 All code is on GitHub. No `.jks`, `key.properties`, or credential files appear in the repo.
@@ -75,34 +75,34 @@ The `docs/`, `apps/`, `packages/` directories all show up correctly on GitHub.
 > Play Store. Back it up to multiple locations BEFORE doing anything else.
 
 ### Step 7.1 — Generate the keystore (USER does this, with AI guidance)
-- [ ] Open Android Studio Terminal (or Windows PowerShell)
-- [ ] Run the keytool command from `docs/templates/05-SIGNING-AND-SECRETS.md` (AI provides exact command)
-- [ ] When prompted, enter a strong password (same for keystore and key is fine)
-- [ ] When prompted for name/org/location, use real information
-- [ ] Note the exact path where `nato_alphabet.jks` was created
+- [x] Open Android Studio Terminal (or Windows PowerShell)
+- [x] Run the keytool command from `docs/templates/05-SIGNING-AND-SECRETS.md` (AI provides exact command)
+- [x] When prompted, enter a strong password (same for keystore and key is fine)
+- [x] When prompted for name/org/location, use real information
+- [x] Note the exact path where `nato_alphabet.jks` was created — `C:\Users\tcozi\Dropbox\private\androidkeys\nato_alphabet.jks`
 
 ### Step 7.2 — Back up the keystore immediately (USER does this)
-- [ ] Copy `nato_alphabet.jks` to at least TWO of these locations:
-  - [ ] Google Drive or OneDrive (encrypted if possible)
+- [x] Copy `nato_alphabet.jks` to at least TWO of these locations:
+  - [x] Dropbox (`C:\Users\tcozi\Dropbox\private\androidkeys\`) ✅
   - [ ] USB drive stored somewhere safe
-  - [ ] Password manager vault (1Password, Bitwarden, etc.)
-- [ ] Save the keystore password in your password manager
-- [ ] Confirm backups exist before continuing
+  - [x] Password manager vault (1Password, Bitwarden, etc.) ✅
+- [x] Save the keystore password in your password manager
+- [x] Confirm backups exist before continuing
 
 ### Step 7.3 — Create `key.properties` (AI does this, with user's path/password)
-- [ ] User provides: full path to `nato_alphabet.jks` and their chosen password
-- [ ] AI creates `apps/nato_alphabet/android/key.properties` with correct values
-- [ ] Verify `key.properties` is listed in `.gitignore` (it must NEVER be committed)
-- [ ] Run `git status` — confirm `key.properties` does NOT appear as a tracked file
+- [x] User provides: full path to `nato_alphabet.jks` and their chosen password
+- [x] AI creates `apps/nato_alphabet/android/key.properties` with correct values
+- [x] Verify `key.properties` is listed in `.gitignore` (it must NEVER be committed)
+- [x] Run `git status` — confirm `key.properties` does NOT appear as a tracked file
 
 ### Step 7.4 — Update `build.gradle` for release signing (AI does this)
-- [ ] AI updates `apps/nato_alphabet/android/app/build.gradle` with signing config from `docs/templates/05-SIGNING-AND-SECRETS.md`
+- [x] AI updates `apps/nato_alphabet/android/app/build.gradle.kts` with signing config (Kotlin DSL — file uses .kts not .gradle)
 
 ### Step 7.5 — Verify release build works locally (AI runs this)
-- [ ] Run `flutter build appbundle --release` in `apps/nato_alphabet/`
-- [ ] Confirm: build succeeds with no errors
-- [ ] Confirm: `build/app/outputs/bundle/release/app-release.aab` exists
-- [ ] Check AAB size: should be under 25MB for this app
+- [x] Run `flutter build appbundle --release` in `apps/nato_alphabet/`
+- [x] Confirm: build succeeds with no errors
+- [x] Confirm: `build/app/outputs/bundle/release/app-release.aab` exists
+- [x] Check AAB size: 39.4MB (under 150MB Play Store limit; note: larger than 25MB estimate in TODO — app includes Google Fonts)
 
 ### ✅ Phase 7 Success Condition
 `flutter build appbundle --release` succeeds locally. The `.aab` file exists.
@@ -115,10 +115,10 @@ Keystore is backed up. `key.properties` is NOT in git.
 **Goal:** Every push to `main` automatically runs tests, builds the app, and uploads it to the Google Play internal testing track.
 
 ### Step 8.1 — Create `codemagic.yaml` (AI does this)
-- [ ] AI creates `codemagic.yaml` at the repo root based on `docs/templates/04-CI-CD.md`
-- [ ] Verify path triggers cover `apps/nato_alphabet/**` and `packages/shared_app_core/**`
-- [ ] Verify pipeline stages: analyze → unit/widget tests → build AAB → publish to internal track
-- [ ] Commit and push `codemagic.yaml` to GitHub
+- [x] AI creates `codemagic.yaml` at the repo root based on `docs/templates/04-CI-CD.md`
+- [x] Verify path triggers cover `apps/nato_alphabet/**` and `packages/shared_app_core/**`
+- [x] Verify pipeline stages: analyze → unit/widget tests → build AAB → publish to internal track
+- [x] Commit and push `codemagic.yaml` to GitHub
 
 ### Step 8.2 — Set up Codemagic account (USER does this, with AI guidance)
 - [ ] Go to https://codemagic.io and sign in with GitHub
