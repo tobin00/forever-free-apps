@@ -56,11 +56,8 @@ workflows:
       branch_patterns:
         - pattern: 'main'
           include: true
-      path_patterns:
-        - pattern: 'apps/nato_alphabet/**'
-          include: true
-        - pattern: 'packages/shared_app_core/**'
-          include: true
+      # Note: path_patterns is NOT supported by Codemagic and will cause a validation error.
+      # Every push to main triggers all workflows. This is acceptable for a small monorepo.
 ```
 
 This means:
@@ -96,11 +93,8 @@ workflows:
       branch_patterns:
         - pattern: 'main'
           include: true
-      path_patterns:
-        - pattern: 'apps/nato_alphabet/**'
-          include: true
-        - pattern: 'packages/shared_app_core/**'
-          include: true
+      # Note: path_patterns is NOT supported by Codemagic and will cause a validation error.
+      # Every push to main triggers all workflows. This is acceptable for a small monorepo.
 
     scripts:
       # Navigate to the app directory
