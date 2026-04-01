@@ -15,8 +15,10 @@
 - ⬜ Phase 9: Store preparation
 - ⬜ Phase 10: First release to internal testing
 - ⬜ Phase 11: Promote to production (Android)
-- ⬜ Phase 12: iOS setup and release (deferred — start after Android is live)
-- ⬜ Phase 13: Final documentation & cleanup
+- ⬜ Phase 12: Ko-fi page setup (do while waiting for Google review)
+- ⬜ Phase 13: Landing page on coziahr.com (do while waiting for Google review)
+- ⬜ Phase 14: iOS setup and release (deferred — start after Android is live)
+- ⬜ Phase 15: Final documentation & cleanup
 
 ---
 
@@ -306,6 +308,7 @@ No crashes. No visual issues. You are satisfied that this is ready for real user
 - [ ] Google typically reviews new apps within **1–3 days** (sometimes faster)
 - [ ] You'll receive an email when approved or if there are issues
 - [ ] Check Play Console for review status
+- [ ] **While waiting: work through Phases 12 and 13 (Ko-fi + landing page)**
 
 ### Step 11.5 — Verify it's live (USER does this)
 - [ ] Search "NATO Alphabet Trainer" on Google Play from a phone (not signed in as developer)
@@ -319,88 +322,178 @@ an Android phone can find and install it. You have verified this with a public i
 
 ---
 
-## Phase 12: iOS Setup and Release (Deferred)
+## Phase 12: Ko-fi Page Setup
+
+**Goal:** Forever Free Apps has a polished Ko-fi presence where supporters can donate, and the
+donation button in every app links directly to it.
+
+> **When to do this:** While waiting for Google's review in Step 11.4. Takes about 30–60 minutes.
+
+### Step 12.1 — Create Ko-fi account (USER does this — requires their identity/payment info)
+- [ ] Go to https://ko-fi.com and sign up
+- [ ] Choose a handle — suggestion: `foreverFreeApps` or `foreverfreeapps`
+- [ ] Connect a payment method (PayPal or Stripe) for receiving donations
+- [ ] Note your Ko-fi page URL (e.g. `https://ko-fi.com/foreverFreeApps`)
+
+### Step 12.2 — Write Ko-fi page content (AI does this)
+- [ ] AI writes: page title, tagline, "About" bio for Forever Free Apps
+- [ ] AI writes: goal description (e.g. "Keep the apps free and ad-free forever")
+- [ ] AI writes: individual app descriptions for the Ko-fi page
+- [ ] All text will be provided ready to paste
+
+### Step 12.3 — Fill out Ko-fi profile (USER pastes AI content, uploads images)
+- [ ] Paste bio and about text from Step 12.2
+- [ ] Profile photo: use the app icon or a simple Forever Free logo
+- [ ] Cover image: AI will describe the recommended spec (1200x400px); USER creates or sources image
+- [ ] Set a donation goal amount (suggestion: $50/month to cover hosting + dev tools)
+
+### Step 12.4 — Update donation button URL in the app (AI does this)
+- [ ] AI finds the donation button URL in the NATO Alphabet app source code
+- [ ] AI updates it to point to the new Ko-fi page URL
+- [ ] AI commits and pushes — Codemagic will auto-build the updated app
+
+### ✅ Phase 12 Success Condition
+Ko-fi page is live and public. The donation button inside the app opens the Ko-fi page correctly.
+The page looks professional and clearly explains the Forever Free mission.
+
+---
+
+## Phase 13: Landing Page on coziahr.com
+
+**Goal:** A public-facing website at coziahr.com (or a subdomain) that showcases all Forever Free
+apps, provides download links, explains the mission, and lets visitors donate or contact you.
+The page auto-updates whenever a new app ships.
+
+> **When to do this:** While waiting for Google's review in Step 11.4, in parallel with Phase 12.
+
+### Step 13.1 — Discover hosting setup (USER answers, AI plans)
+- [ ] USER answers: How is coziahr.com currently hosted? (WordPress, Squarespace, GitHub Pages,
+  raw cPanel/FTP, Cloudflare Pages, Netlify, other?)
+- [ ] USER answers: Do you want the Forever Free section at `coziahr.com/apps`, a subdomain
+  like `apps.coziahr.com`, or a full page takeover?
+- [ ] AI reviews answers and recommends the build approach (static HTML, or CMS integration)
+
+### Step 13.2 — Design and content plan (AI does this)
+- [ ] AI drafts the full page structure:
+  - Hero section: "Forever Free Apps" — mission statement, tagline
+  - App grid: one card per app (icon, name, description, Play Store link, App Store link)
+  - About section: who makes these apps and why
+  - Donate section: Ko-fi embed or link
+  - Contact section: email form or mailto link
+- [ ] AI writes all copy for every section
+- [ ] AI specifies color palette and font choices consistent with the app brand
+
+### Step 13.3 — Build the landing page (AI does this)
+- [ ] AI builds the page as static HTML/CSS (works with any host)
+  - OR integrates with whatever CMS coziahr.com uses (determined in Step 13.1)
+- [ ] Mobile-responsive layout
+- [ ] Play Store badge for NATO Alphabet (and placeholders for future apps)
+- [ ] Ko-fi donate button embedded
+- [ ] Contact form (using Formspree or mailto — no server required)
+
+### Step 13.4 — Auto-update when a new app ships (AI does this)
+- [ ] AI creates a GitHub Actions workflow that:
+  - Triggers on a new GitHub Release tag (e.g. `v1.0.0-word-game`)
+  - Reads app metadata from a config file in the repo (`apps/APP_NAME/metadata.yaml`)
+  - Regenerates the app grid on the landing page with the new app included
+  - Deploys the updated page to the host automatically
+- [ ] AI creates `apps/nato_alphabet/metadata.yaml` as the first example
+- [ ] Adding a new app in the future = add its `metadata.yaml`, tag a release, site updates itself
+
+### Step 13.5 — Deploy and verify (USER deploys, AI verifies content)
+- [ ] USER uploads or deploys the built page to coziahr.com (exact steps depend on host)
+- [ ] AI checks: all links work, Play Store badge links to correct app, Ko-fi link works
+- [ ] USER confirms it looks correct on mobile and desktop
+
+### ✅ Phase 13 Success Condition
+`coziahr.com` (or subdomain) shows a live, polished Forever Free Apps landing page.
+Play Store download link works. Ko-fi donate button works. Contact option works.
+A future app can be added by dropping in a `metadata.yaml` and tagging a release.
+
+---
+
+## Phase 14: iOS Setup and Release (Deferred)
 
 **Start this phase ONLY after Android is successfully live and you are ready.**
 
 > iOS requires a Mac (or Mac cloud instance) for building and submitting.
 > It also requires an Apple Developer account ($99/year).
 
-### Step 12.1 — Prerequisites (USER arranges)
+### Step 14.1 — Prerequisites (USER arranges)
 - [ ] Apple Developer Program enrollment: https://developer.apple.com/programs/
   - $99/year fee
   - Identity verification required (may take a few days)
 - [ ] Access to a Mac: borrow one, or use a cloud Mac service (e.g., MacStadium, AWS EC2 Mac)
 - [ ] Xcode installed on the Mac (free from Mac App Store)
 
-### Step 12.2 — iOS Flutter configuration (AI does this)
+### Step 14.2 — iOS Flutter configuration (AI does this)
 - [ ] Update `pubspec.yaml`: set `ios: true` in `flutter_launcher_icons`
 - [ ] Update `codemagic.yaml`: uncomment and configure the iOS workflow
 - [ ] Set minimum iOS deployment target in `ios/Podfile` and Xcode project: **iOS 13.0**
 - [ ] Verify no Android-specific code exists that would break iOS
 
-### Step 12.3 — iOS signing setup (USER does this on a Mac, with AI guidance)
+### Step 14.3 — iOS signing setup (USER does this on a Mac, with AI guidance)
 - [ ] Create App ID in Apple Developer portal
 - [ ] Create Distribution Certificate in Keychain Access on Mac
 - [ ] Create App Store Provisioning Profile
 - [ ] Upload `.p12` certificate and provisioning profile to Codemagic
   - OR use Codemagic's automatic code signing (simpler, recommended)
 
-### Step 12.4 — Create app in App Store Connect (USER does this)
+### Step 14.4 — Create app in App Store Connect (USER does this)
 - [ ] Go to https://appstoreconnect.apple.com
 - [ ] Create a new App with bundle ID matching `android/app/build.gradle` applicationId
 - [ ] Fill in App Store listing (use `docs/nato_alphabet/STORE-LISTING.md` — Apple section)
 - [ ] Complete Privacy Nutrition Labels (same answers as Play Store data safety)
 
-### Step 12.5 — iOS screenshots (USER captures)
+### Step 14.5 — iOS screenshots (USER captures)
 Apple requires multiple screenshot sizes:
 - [ ] iPhone 6.7" (1290x2796 or 1320x2868)
 - [ ] iPhone 6.5" (1242x2688) — required if supporting older devices
 - [ ] iPad 12.9" (2048x2732) — required if app supports iPad
 - [ ] Use the same clean emulator approach as Android
 
-### Step 12.6 — First iOS build and TestFlight (AI triggers, USER tests)
+### Step 14.6 — First iOS build and TestFlight (AI triggers, USER tests)
 - [ ] Push to `main` with iOS workflow active
 - [ ] Codemagic builds `.ipa` and uploads to TestFlight
 - [ ] Install from TestFlight on your iPad for testing
 - [ ] Verify all screens, both light/dark mode, accessibility
 
-### Step 12.7 — Submit for App Store review (USER does this)
+### Step 14.7 — Submit for App Store review (USER does this)
 - [ ] In App Store Connect: select the TestFlight build for production
 - [ ] Submit for review
 - [ ] Apple review typically takes **1–3 days** for new apps
 - [ ] Respond promptly if Apple requests changes
 
-### ✅ Phase 12 Success Condition
+### ✅ Phase 14 Success Condition
 App is live on the Apple App Store. Anyone with an iPhone or iPad can find and install
 "Forever Free: NATO Alphabet." Verified with a public install.
 
 ---
 
-## Phase 13: Final Documentation & Cleanup
+## Phase 15: Final Documentation & Cleanup
 
 **Goal:** Templates are updated, documentation is complete, and the project is ready for the next app.
 
-### Step 13.1 — Complete the checklist (AI + USER)
+### Step 15.1 — Complete the checklist (AI + USER)
 - [ ] Go through every item in `docs/nato_alphabet/CHECKLIST.md`
 - [ ] Check off all remaining items (CI/CD, store readiness, post-launch)
 - [ ] Note any items that don't apply or needed adjustment for future reference
 
-### Step 13.2 — Verify templates are current (AI does this)
+### Step 15.2 — Verify templates are current (AI does this)
 - [ ] Confirm all changes made during this project are reflected in `docs/templates/`
 - [ ] The templates were updated in Phase 5 (document audit) — verify nothing was missed
-- [ ] Add any new lessons learned from Phases 6–12
+- [ ] Add any new lessons learned from Phases 6–14
 
-### Step 13.3 — Update project memory (AI does this)
+### Step 15.3 — Update project memory (AI does this)
 - [ ] Update `memory/MEMORY.md`:
   - Current Phase: Complete
-  - App status: Live on Google Play (and App Store if Phase 12 done)
+  - App status: Live on Google Play (and App Store if Phase 14 done)
   - Next Steps: Ready for next app idea
 
-### Step 13.4 — Celebrate 🎉 (USER does this)
+### Step 15.4 — Celebrate 🎉 (USER does this)
 - [ ] The first app is live. The pipeline works. The next app will be much faster.
 
-### ✅ Phase 13 Success Condition
+### ✅ Phase 15 Success Condition
 All documentation is accurate and complete. The project is in a clean state.
 Templates reflect everything learned from the first app.
 
@@ -430,6 +523,14 @@ Templates reflect everything learned from the first app.
 | Create feature graphic | **User** (design tool, creative judgment) |
 | Promote builds to production | **User** (requires Play Console access) |
 | Install and QA test on real device | **User** (requires physical Android phone) |
+| Write Ko-fi page copy and app descriptions | **AI** |
+| Update donation button URL in app code | **AI** |
+| Write all landing page copy and build HTML/CSS | **AI** |
+| Build GitHub Actions auto-update workflow for landing page | **AI** |
+| Create Ko-fi account and connect payment | **User** (their identity + payment account) |
+| Upload images to Ko-fi (profile photo, cover) | **User** (design + their account) |
+| Deploy landing page to coziahr.com | **User** (requires domain/hosting access) |
+| Create Ko-fi cover image (1200x400px) | **User** (design tool) |
 | Apple Developer account + signing | **User** (requires $99/year + Mac) |
 
 ---
