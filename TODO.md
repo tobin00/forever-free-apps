@@ -131,9 +131,9 @@ Keystore is backed up. `key.properties` is NOT in git.
 - [ ] Codemagic should detect the `nato-alphabet-android` workflow automatically
 
 ### Step 8.3 — Google Play Developer account (USER does this — one-time setup)
-- [ ] Go to https://play.google.com/console/
-- [ ] Pay the one-time **$25** registration fee (if not already done)
-- [ ] Complete identity verification (may take 1-2 days)
+- [x] Go to https://play.google.com/console/
+- [x] Pay the one-time **$25** registration fee (if not already done)
+- [x] Complete identity verification (may take 1-2 days) — **submitted, awaiting verification**
 - [ ] Confirm account is active before continuing
 
 ### Step 8.4 — Google Cloud service account for automated publishing (USER does this, with AI guidance)
@@ -150,18 +150,18 @@ Keystore is backed up. `key.properties` is NOT in git.
 - [ ] Apply to **All apps** (so future apps work too)
 
 ### Step 8.5 — Base64-encode keystore for Codemagic (AI does this)
-- [ ] AI runs PowerShell to base64-encode `nato_alphabet.jks` and outputs the result
-- [ ] AI displays the encoded string for you to copy into Codemagic
-- [ ] Treat the encoded string like the keystore — don't share it publicly
+- [x] AI runs PowerShell to base64-encode `nato_alphabet.jks` and outputs the result
+- [x] Encoded string saved to `C:\Users\tcozi\Dropbox\private\androidkeys\nato_alphabet_base64.txt`
+- [x] Treat the encoded string like the keystore — don't share it publicly
 
 ### Step 8.6 — Add environment variables to Codemagic (USER does this — requires Codemagic account)
-- [ ] In Codemagic: **Teams → Environment variables → Add group** named `android_credentials`
-- [ ] Add and mark each as **Secure** (so they never appear in build logs):
-  - [ ] `CM_KEYSTORE` = base64 string from Step 8.5
-  - [ ] `CM_KEYSTORE_PASSWORD` = `Vc*rU2qtWervX7ZU`
-  - [ ] `CM_KEY_ALIAS` = `nato_alphabet_key`
-  - [ ] `CM_KEY_PASSWORD` = `Vc*rU2qtWervX7ZU`
-  - [ ] `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` = entire contents of the JSON key file downloaded in Step 8.4
+- [x] In Codemagic: **Teams → Environment variables → Add group** named `android_credentials`
+- [x] Add and mark each as **Secure** (so they never appear in build logs):
+  - [x] `CM_KEYSTORE` = base64 string from Step 8.5
+  - [x] `CM_KEYSTORE_PASSWORD` = `Vc*rU2qtWervX7ZU`
+  - [x] `CM_KEY_ALIAS` = `nato_alphabet_key`
+  - [x] `CM_KEY_PASSWORD` = `Vc*rU2qtWervX7ZU`
+  - [ ] `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` = entire contents of the JSON key file downloaded in Step 8.4 — **waiting on Play Console access**
 - [ ] Verify all 5 variables are in the `android_credentials` group
 
 ### Step 8.7 — Create app in Google Play Console (USER does this — requires Play Console access)
