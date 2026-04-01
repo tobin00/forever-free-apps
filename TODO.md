@@ -147,22 +147,22 @@ Keystore is backed up. `key.properties` is NOT in git.
 - [ ] Grant permissions: **App information** → "Edit and manage"
 - [ ] Apply to **All apps** (so future apps work too)
 
-### Step 8.5 — Base64-encode keystore for Codemagic (USER does this, with AI guidance)
-- [ ] Open PowerShell and run the base64 command from `docs/templates/05-SIGNING-AND-SECRETS.md`
-- [ ] This produces a `.txt` file containing the encoded keystore
-- [ ] Keep this file secure — treat it like the keystore itself
+### Step 8.5 — Base64-encode keystore for Codemagic (AI does this)
+- [ ] AI runs PowerShell to base64-encode `nato_alphabet.jks` and outputs the result
+- [ ] AI displays the encoded string for you to copy into Codemagic
+- [ ] Treat the encoded string like the keystore — don't share it publicly
 
-### Step 8.6 — Add environment variables to Codemagic (USER does this, with AI guidance)
+### Step 8.6 — Add environment variables to Codemagic (USER does this — requires Codemagic account)
 - [ ] In Codemagic: **Teams → Environment variables → Add group** named `android_credentials`
 - [ ] Add and mark each as **Secure** (so they never appear in build logs):
-  - [ ] `CM_KEYSTORE` = contents of the base64 `.txt` file
-  - [ ] `CM_KEYSTORE_PASSWORD` = your keystore password
+  - [ ] `CM_KEYSTORE` = base64 string from Step 8.5
+  - [ ] `CM_KEYSTORE_PASSWORD` = `Vc*rU2qtWervX7ZU`
   - [ ] `CM_KEY_ALIAS` = `nato_alphabet_key`
-  - [ ] `CM_KEY_PASSWORD` = your key password
+  - [ ] `CM_KEY_PASSWORD` = `Vc*rU2qtWervX7ZU`
   - [ ] `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` = entire contents of the JSON key file downloaded in Step 8.4
 - [ ] Verify all 5 variables are in the `android_credentials` group
 
-### Step 8.7 — Create app in Google Play Console (USER does this, with AI guidance)
+### Step 8.7 — Create app in Google Play Console (USER does this — requires Play Console access)
 This step is needed before the CI pipeline can publish (Play API needs an app to exist first).
 - [ ] In Play Console: click **Create app**
 - [ ] App name: `NATO Alphabet Trainer`
@@ -172,9 +172,9 @@ This step is needed before the CI pipeline can publish (Play API needs an app to
 - [ ] Accept declarations → click **Create app**
 - [ ] Note the package name shown — it must match `applicationId` in `build.gradle`
 
-### Step 8.8 — Trigger first CI build (AI pushes, both verify)
-- [ ] Push any small change to `main` (e.g., update a comment) to trigger Codemagic
-- [ ] Watch the build in the Codemagic dashboard
+### Step 8.8 — Trigger first CI build (AI pushes trigger commit)
+- [ ] AI pushes a small change to `main` to trigger Codemagic
+- [ ] USER watches the build in the Codemagic dashboard
 - [ ] Verify each stage passes: Analyze ✅ → Tests ✅ → Build ✅ → Publish ✅
 - [ ] Confirm the build artifact (`.aab`) is downloadable from Codemagic
 
@@ -188,33 +188,31 @@ the AAB to the Google Play internal testing track without errors.
 
 **Goal:** The Play Store listing is complete, polished, and ready for users to see.
 
-### Step 9.1 — Privacy policy (AI writes, user hosts)
-- [ ] AI generates privacy policy text for NATO Alphabet app (based on template in `docs/templates/06-STORE-PUBLISHING.md`)
-- [ ] User creates a `privacy/` directory in the GitHub repo with the policy as an HTML or Markdown file
-- [ ] Enable GitHub Pages on the repo (Settings → Pages → deploy from `main` branch `/privacy` folder)
-  - OR host it anywhere with a public URL (Google Sites, Notion, etc.)
-- [ ] Confirm the privacy policy URL is publicly accessible
+### Step 9.1 — Privacy policy (AI writes and commits; USER enables GitHub Pages)
+- [ ] AI generates privacy policy as `privacy/index.html` in the repo and pushes it
+- [ ] USER enables GitHub Pages: repo Settings → Pages → deploy from `main` branch `/privacy` folder
+- [ ] Confirm the privacy policy URL is publicly accessible (e.g. `https://tobin00.github.io/forever-free-apps/privacy/`)
 
-### Step 9.2 — Data Safety questionnaire (USER does this, with AI guidance)
+### Step 9.2 — Data Safety questionnaire (USER does this — requires Play Console access)
 - [ ] In Play Console: **App content → Data safety**
 - [ ] Answer: Does your app collect or share user data? → **No**
 - [ ] Complete and save
 - [ ] Expected badge: **No data collected**
 
-### Step 9.3 — Content rating (USER does this, with AI guidance)
+### Step 9.3 — Content rating (USER does this — requires Play Console access)
 - [ ] In Play Console: **App content → Content rating**
 - [ ] Select IARC questionnaire
 - [ ] Answer: Violence → None, Sexuality → None, Language → None, Controlled Substances → None
 - [ ] Expected rating: **Everyone (PEGI 3)**
 
-### Step 9.4 — Store listing text (USER pastes, with AI's prepared text)
-- [ ] Open `docs/nato_alphabet/STORE-LISTING.md`
+### Step 9.4 — Store listing text (USER pastes from AI-prepared file)
+- [ ] AI confirms all text is ready in `docs/nato_alphabet/STORE-LISTING.md`
 - [ ] In Play Console: **Store presence → Main store listing**
-- [ ] Paste: App name, short description, full description from STORE-LISTING.md
+- [ ] USER pastes: App name, short description, full description from STORE-LISTING.md
 - [ ] Set Category: **Education**
 - [ ] Add tags: nato, phonetic, alphabet, flashcard, quiz, free, offline
 
-### Step 9.5 — Screenshots (USER captures, with AI's plan)
+### Step 9.5 — Screenshots (USER captures)
 Follow the screenshot plan in `docs/nato_alphabet/STORE-LISTING.md`:
 - [ ] Run app in release mode on a clean emulator (no debug banner): `flutter run --release`
 - [ ] Screenshot 1: Reference screen with A–F visible
@@ -225,7 +223,7 @@ Follow the screenshot plan in `docs/nato_alphabet/STORE-LISTING.md`:
 - [ ] Screenshot 6: About page
 - [ ] Upload to Play Console (phone size: 1080x1920 minimum)
 
-### Step 9.6 — Feature graphic (USER creates)
+### Step 9.6 — Feature graphic (USER creates — requires design tool)
 - [ ] Create a 1024x500 image per spec in `docs/nato_alphabet/STORE-LISTING.md`:
   - Deep Ocean Blue (#1B5E7B) gradient background
   - App name "NATO Alphabet Trainer" in Nunito Bold, white
@@ -234,10 +232,11 @@ Follow the screenshot plan in `docs/nato_alphabet/STORE-LISTING.md`:
 - [ ] Suggested tools: Canva (free), Figma (free), or Adobe Express
 - [ ] Upload to Play Console
 
-### Step 9.7 — App icon (USER verifies)
-- [ ] Confirm `assets/icon/icon.png` exists in the app
-- [ ] Run `dart run flutter_launcher_icons` to generate Android adaptive icons
-- [ ] Verify icon looks correct in Play Console upload
+### Step 9.7 — App icon (AI runs, USER verifies in Play Console)
+- [ ] AI confirms `assets/icon/icon.png` exists
+- [ ] AI runs `dart run flutter_launcher_icons` to generate Android adaptive icons
+- [ ] AI commits and pushes the generated icon assets
+- [ ] USER verifies icon looks correct when uploaded to Play Console
 
 ### ✅ Phase 9 Success Condition
 Play Console shows no warnings or incomplete sections on the store listing.
@@ -285,9 +284,9 @@ No crashes. No visual issues. You are satisfied that this is ready for real user
 
 **Goal:** The app is live on the Google Play Store, publicly available to anyone.
 
-### Step 11.1 — Final checklist review (AI + USER together)
-- [ ] Open `docs/nato_alphabet/CHECKLIST.md` and go through every item
-- [ ] Check off everything that is done; investigate anything not checked
+### Step 11.1 — Final checklist review (AI reads and reports; USER confirms)
+- [ ] AI reads `docs/nato_alphabet/CHECKLIST.md` and checks off everything completed
+- [ ] AI reports any unchecked items for USER to investigate
 - [ ] No unchecked items in Code Quality, Testing, Accessibility, or Visual & UX sections
 
 ### Step 11.2 — Promote to open testing (optional — recommended for first-time)
@@ -412,20 +411,25 @@ Templates reflect everything learned from the first app.
 | Task | Who |
 |------|-----|
 | Run tests, verify code, write config files | **AI** |
-| Generate keystore | **User** (requires local machine) |
-| Back up keystore | **User** (requires secure storage) |
+| Run git commands, commit, push | **AI** |
+| Base64-encode keystore for Codemagic | **AI** |
+| Write and commit privacy policy | **AI** |
+| Run `flutter_launcher_icons` | **AI** |
+| Read and check off checklist | **AI** |
+| Generate keystore (`keytool` — interactive prompts) | **User** (interactive password entry) |
+| Back up keystore to USB | **User** (physical storage) |
 | Create GitHub repository | **User** (requires GitHub account) |
-| Push to GitHub | **User** (runs git commands) |
-| Create Codemagic account | **User** (requires web signup) |
-| Set Codemagic environment variables | **User** (contains secrets) |
-| Create Google Play Developer account | **User** (requires $25 + identity) |
-| Create Google Cloud service account | **User** (requires Google account) |
+| Create Codemagic account and connect repo | **User** (requires web signup + GitHub OAuth) |
+| Enter environment variables in Codemagic UI | **User** (contains secrets, requires their account) |
+| Create Google Play Developer account | **User** (requires $25 + identity verification) |
+| Create Google Cloud service account | **User** (requires their Google account) |
 | Create app in Play Console | **User** (requires Play Console access) |
-| Take screenshots | **User** (requires running the app) |
-| Create feature graphic | **User** (design tool) |
-| Host privacy policy | **User** (requires web hosting) |
-| Complete store questionnaires | **User** (requires console access) |
-| Promote builds to production | **User** (requires console access) |
+| Enable GitHub Pages | **User** (one toggle in GitHub Settings) |
+| Complete store questionnaires (data safety, rating) | **User** (requires Play Console access) |
+| Take screenshots | **User** (requires running app + phone/emulator) |
+| Create feature graphic | **User** (design tool, creative judgment) |
+| Promote builds to production | **User** (requires Play Console access) |
+| Install and QA test on real device | **User** (requires physical Android phone) |
 | Apple Developer account + signing | **User** (requires $99/year + Mac) |
 
 ---
