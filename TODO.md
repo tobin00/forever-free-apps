@@ -12,7 +12,7 @@
 - ✅ **Phase 6 COMPLETE:** Code on GitHub (public repo), no secrets committed.
 - ✅ **Phase 7 COMPLETE:** Keystore generated, backed up, release build verified.
 - 🔄 **Phase 8 IN PROGRESS:** All 5 env vars in Codemagic. App created in Play Console ("NATO Phonetic Alphabet Trainer"). Service account created in Google Cloud, invited in Play Console with testing + production release permissions. Ready to trigger first build.
-- 🔄 **Phase 9 IN PROGRESS:** Privacy policy written and committed. GitHub Pages enabled (repo made public). 6 screenshots captured by AI via emulator. Remaining: confirm Pages URL is live, fill Play Console store listing, upload screenshots, create feature graphic (1024x500).
+- ✅ **Phase 9 COMPLETE:** Store listing complete. All screenshots (phone, 7", 10"), feature graphic, icon uploaded. Privacy policy live. Data safety and content rating filled in.
 - ⬜ Phase 10: First release to internal testing
 - ⬜ Phase 11: Promote to production (Android)
 - ✅ **Phase 12 COMPLETE:** Ko-fi page live at https://ko-fi.com/foreverfreeapps. Profile photo, cover image, and bio all uploaded. Donation URL live in app.
@@ -218,21 +218,18 @@ the AAB to the Google Play internal testing track without errors.
 - [x] Screenshot 4: Word Quiz — "GRAND", Show Me + Next buttons visible
 - [x] Screenshot 5: Word Quiz revealed — G/R/A/N/D spelled out with NATO names
 - [x] Screenshot 6: About page — mission statement, Support button
-- [ ] USER uploads screenshots from `docs/nato_alphabet/screenshots/` to Play Console
+- [x] USER uploads screenshots from `docs/nato_alphabet/screenshots/` to Play Console
 
-### Step 9.6 — Feature graphic (USER creates — requires design tool)
-- [ ] Create a 1024x500 image per spec in `docs/nato_alphabet/STORE-LISTING.md`:
-  - Deep Ocean Blue (#1B5E7B) gradient background
-  - App name "NATO Alphabet Trainer" in Nunito Bold, white
-  - Faded alphabet letters (A — Alpha, B — Bravo, etc.) in background
-  - Warm Amber (#F4A726) accent line or detail
-- [ ] Suggested tools: Canva (free), Figma (free), or Adobe Express
-- [ ] Upload to Play Console
+### Step 9.6 — Feature graphic (AI generated)
+- [x] AI generated `docs/nato_alphabet/store_assets/feature_graphic_1024x500.png`
+  - Deep Ocean Blue gradient, left-to-right dot fade (matching Ko-fi banner style)
+  - "NATO Phonetic Alphabet Trainer" in bold white, amber underline + tagline
+  - 4x4 colorful rounded letter tiles (A–P) on the right
+- [x] Upload to Play Console
 
-### Step 9.7 — App icon (AI runs, USER verifies in Play Console)
-- [x] AI confirmed `assets/icon/icon.png` exists
-- [x] AI ran `dart run flutter_launcher_icons` — icons already generated and committed
-- [ ] USER verifies icon looks correct when uploaded to Play Console
+### Step 9.7 — App icon (AI generated 512x512)
+- [x] AI resized `assets/icon/icon.png` → `store_assets/icon_512x512.png`
+- [x] USER uploaded to Play Console
 
 ### ✅ Phase 9 Success Condition
 Play Console shows no warnings or incomplete sections on the store listing.

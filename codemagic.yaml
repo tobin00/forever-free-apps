@@ -79,7 +79,7 @@ workflows:
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: internal    # Start with internal testing track
-        submit_as_draft: true    # Switch to false once store listing is complete and app leaves draft state
+        submit_as_draft: false
 
   # ============================
   # NATO Alphabet - iOS (DEFERRED)
