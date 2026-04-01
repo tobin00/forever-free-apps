@@ -11,7 +11,7 @@
 - ✅ **Phase 1–5 COMPLETE:** App is built, tested, and approved.
 - ✅ **Phase 6 COMPLETE:** Code on GitHub (public repo), no secrets committed.
 - ✅ **Phase 7 COMPLETE:** Keystore generated, backed up, release build verified.
-- 🔄 **Phase 8 IN PROGRESS:** Codemagic connected, yaml loaded, 4/5 env vars added. Blocked on Play Console identity verification (submitted, awaiting approval — typically 1–3 days). Once verified: set up Google Cloud service account → add GCLOUD_SERVICE_ACCOUNT_CREDENTIALS → create app in Play Console → trigger first build.
+- 🔄 **Phase 8 IN PROGRESS:** All 5 env vars in Codemagic. App created in Play Console ("NATO Phonetic Alphabet Trainer"). Service account created in Google Cloud, invited in Play Console with testing + production release permissions. Ready to trigger first build.
 - 🔄 **Phase 9 IN PROGRESS:** Privacy policy written and committed. GitHub Pages enabled (repo made public). 6 screenshots captured by AI via emulator. Remaining: confirm Pages URL is live, fill Play Console store listing, upload screenshots, create feature graphic (1024x500).
 - ⬜ Phase 10: First release to internal testing
 - ⬜ Phase 11: Promote to production (Android)
@@ -133,21 +133,17 @@ Keystore is backed up. `key.properties` is NOT in git.
 ### Step 8.3 — Google Play Developer account (USER does this — one-time setup)
 - [x] Go to https://play.google.com/console/
 - [x] Pay the one-time **$25** registration fee (if not already done)
-- [x] Complete identity verification (may take 1-2 days) — **submitted, awaiting verification**
-- [ ] Confirm account is active before continuing
+- [x] Complete identity verification (may take 1-2 days) — **verified ✅**
+- [x] Confirm account is active before continuing
 
 ### Step 8.4 — Google Cloud service account for automated publishing (USER does this, with AI guidance)
-- [ ] Go to **Google Play Console → Setup → API access**
-- [ ] Link a Google Cloud project (or create a new one — name it `forever-free-publisher`)
-- [ ] Click **Create new service account** → follow the link to Google Cloud Console
-- [ ] Create service account:
-  - Name: `codemagic-publisher`
-  - Role: leave blank (permissions set in Play Console)
-- [ ] In Google Cloud: Create a JSON key for this service account → download it
-- [ ] Back in Play Console → Setup → API access: find the new service account → click **Manage permissions**
-- [ ] Grant permissions: **Releases** → "Manage production and testing track releases"
-- [ ] Grant permissions: **App information** → "Edit and manage"
-- [ ] Apply to **All apps** (so future apps work too)
+- [x] Create Google Cloud project: `forever-free-publisher`
+- [x] Enable Google Play Android Developer API
+- [x] Create service account: `codemagic-publisher` (role left blank)
+- [x] Download JSON key for the service account
+- [x] In Play Console → Users and permissions → Invite service account email
+- [x] Grant: Manage testing track releases
+- [x] Grant: Manage production releases
 
 ### Step 8.5 — Base64-encode keystore for Codemagic (AI does this)
 - [x] AI runs PowerShell to base64-encode `nato_alphabet.jks` and outputs the result
@@ -161,17 +157,17 @@ Keystore is backed up. `key.properties` is NOT in git.
   - [x] `CM_KEYSTORE_PASSWORD` = `Vc*rU2qtWervX7ZU`
   - [x] `CM_KEY_ALIAS` = `nato_alphabet_key`
   - [x] `CM_KEY_PASSWORD` = `Vc*rU2qtWervX7ZU`
-  - [ ] `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` = entire contents of the JSON key file downloaded in Step 8.4 — **waiting on Play Console access**
-- [ ] Verify all 5 variables are in the `android_credentials` group
+  - [x] `GCLOUD_SERVICE_ACCOUNT_CREDENTIALS` = entire contents of the JSON key file downloaded in Step 8.4
+- [x] Verify all 5 variables are in the `android_credentials` group
 
 ### Step 8.7 — Create app in Google Play Console (USER does this — requires Play Console access)
 This step is needed before the CI pipeline can publish (Play API needs an app to exist first).
-- [ ] In Play Console: click **Create app**
-- [ ] App name: `NATO Alphabet Trainer`
-- [ ] Default language: English (United States)
-- [ ] App or Game: **App**
-- [ ] Free or Paid: **Free**
-- [ ] Accept declarations → click **Create app**
+- [x] In Play Console: click **Create app**
+- [x] App name: `NATO Phonetic Alphabet Trainer`
+- [x] Default language: English (United States)
+- [x] App or Game: **App**
+- [x] Free or Paid: **Free**
+- [x] Accept declarations → click **Create app**
 - [ ] Note the package name shown — it must match `applicationId` in `build.gradle`
 
 ### Step 8.8 — Trigger first CI build (AI pushes trigger commit)
