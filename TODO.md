@@ -191,8 +191,8 @@ the AAB to the Google Play internal testing track without errors.
 **Goal:** The Play Store listing is complete, polished, and ready for users to see.
 
 ### Step 9.1 — Privacy policy (AI writes and commits; USER enables GitHub Pages)
-- [ ] AI generates privacy policy as `privacy/index.html` in the repo and pushes it
-- [ ] USER enables GitHub Pages: repo Settings → Pages → deploy from `main` branch `/privacy` folder
+- [x] AI generates privacy policy as `privacy/index.html` in the repo and pushes it
+- [ ] USER enables GitHub Pages: repo Settings → Pages → deploy from `main` branch, root `/` folder
 - [ ] Confirm the privacy policy URL is publicly accessible (e.g. `https://tobin00.github.io/forever-free-apps/privacy/`)
 
 ### Step 9.2 — Data Safety questionnaire (USER does this — requires Play Console access)
@@ -214,16 +214,15 @@ the AAB to the Google Play internal testing track without errors.
 - [ ] Set Category: **Education**
 - [ ] Add tags: nato, phonetic, alphabet, flashcard, quiz, free, offline
 
-### Step 9.5 — Screenshots (USER captures)
-Follow the screenshot plan in `docs/nato_alphabet/STORE-LISTING.md`:
-- [ ] Run app in release mode on a clean emulator (no debug banner): `flutter run --release`
-- [ ] Screenshot 1: Reference screen with A–F visible
-- [ ] Screenshot 2: Letter Quiz — letter shown, NATO word hidden
-- [ ] Screenshot 3: Letter Quiz — NATO word revealed
-- [ ] Screenshot 4: Word Quiz — word shown, letters hidden
-- [ ] Screenshot 5: Word Quiz — letters revealed with animation
-- [ ] Screenshot 6: About page
-- [ ] Upload to Play Console (phone size: 1080x1920 minimum)
+### Step 9.5 — Screenshots (AI captured via emulator + adb)
+- [x] AI ran app on Android emulator in profile mode (no debug banner)
+- [x] Screenshot 1: Reference screen — A through H visible
+- [x] Screenshot 2: Letter Quiz — "E" shown, Reveal + Next buttons visible
+- [x] Screenshot 3: Letter Quiz — "Echo" revealed, Reveal button grayed out
+- [x] Screenshot 4: Word Quiz — "GRAND", Show Me + Next buttons visible
+- [x] Screenshot 5: Word Quiz revealed — G/R/A/N/D spelled out with NATO names
+- [x] Screenshot 6: About page — mission statement, Support button
+- [ ] USER uploads screenshots from `docs/nato_alphabet/screenshots/` to Play Console
 
 ### Step 9.6 — Feature graphic (USER creates — requires design tool)
 - [ ] Create a 1024x500 image per spec in `docs/nato_alphabet/STORE-LISTING.md`:
@@ -235,9 +234,8 @@ Follow the screenshot plan in `docs/nato_alphabet/STORE-LISTING.md`:
 - [ ] Upload to Play Console
 
 ### Step 9.7 — App icon (AI runs, USER verifies in Play Console)
-- [ ] AI confirms `assets/icon/icon.png` exists
-- [ ] AI runs `dart run flutter_launcher_icons` to generate Android adaptive icons
-- [ ] AI commits and pushes the generated icon assets
+- [x] AI confirmed `assets/icon/icon.png` exists
+- [x] AI ran `dart run flutter_launcher_icons` — icons already generated and committed
 - [ ] USER verifies icon looks correct when uploaded to Play Console
 
 ### ✅ Phase 9 Success Condition
