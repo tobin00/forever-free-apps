@@ -9,13 +9,13 @@
 ## Current Status
 
 - ✅ **Phase 1–5 COMPLETE:** App is built, tested, and approved.
-- ✅ **Phase 6 COMPLETE:** Code on GitHub, no secrets committed.
+- ✅ **Phase 6 COMPLETE:** Code on GitHub (public repo), no secrets committed.
 - ✅ **Phase 7 COMPLETE:** Keystore generated, backed up, release build verified.
-- 🔄 **Phase 8 IN PROGRESS:** codemagic.yaml created and pushed. Awaiting Codemagic account setup.
-- ⬜ Phase 9: Store preparation
+- 🔄 **Phase 8 IN PROGRESS:** Codemagic connected, yaml loaded, 4/5 env vars added. Blocked on Play Console identity verification (submitted, awaiting approval — typically 1–3 days). Once verified: set up Google Cloud service account → add GCLOUD_SERVICE_ACCOUNT_CREDENTIALS → create app in Play Console → trigger first build.
+- 🔄 **Phase 9 IN PROGRESS:** Privacy policy written and committed. GitHub Pages enabled (repo made public). 6 screenshots captured by AI via emulator. Remaining: confirm Pages URL is live, fill Play Console store listing, upload screenshots, create feature graphic (1024x500).
 - ⬜ Phase 10: First release to internal testing
 - ⬜ Phase 11: Promote to production (Android)
-- ⬜ Phase 12: Ko-fi page setup (do while waiting for Google review)
+- 🔄 **Phase 12 IN PROGRESS:** Ko-fi account created (https://ko-fi.com/foreverfreeapps). Copy written by AI. Profile + banner images generated (in docs/nato_alphabet/kofi_assets/). Donation URL updated in app. Remaining: user uploads images and pastes bio to Ko-fi UI.
 - ⬜ Phase 13: Landing page on coziahr.com (do while waiting for Google review)
 - ⬜ Phase 14: iOS setup and release (deferred — start after Android is live)
 - ⬜ Phase 15: Final documentation & cleanup
@@ -123,12 +123,12 @@ Keystore is backed up. `key.properties` is NOT in git.
 - [x] Commit and push `codemagic.yaml` to GitHub
 
 ### Step 8.2 — Set up Codemagic account (USER does this, with AI guidance)
-- [ ] Go to https://codemagic.io and sign in with GitHub
-- [ ] Click "Add application"
-- [ ] Select the `forever-free-apps` repository
-- [ ] Choose "Flutter App" as project type
-- [ ] Choose "codemagic.yaml" (not the workflow editor)
-- [ ] Codemagic should detect the `nato-alphabet-android` workflow automatically
+- [x] Go to https://codemagic.io and sign in with GitHub
+- [x] Click "Add application"
+- [x] Select the `forever-free-apps` repository
+- [x] Choose "Flutter App" as project type
+- [x] Choose "codemagic.yaml" (not the workflow editor)
+- [x] Codemagic detected the `nato-alphabet-android` workflow automatically — no validation errors
 
 ### Step 8.3 — Google Play Developer account (USER does this — one-time setup)
 - [x] Go to https://play.google.com/console/
@@ -191,9 +191,9 @@ the AAB to the Google Play internal testing track without errors.
 **Goal:** The Play Store listing is complete, polished, and ready for users to see.
 
 ### Step 9.1 — Privacy policy (AI writes and commits; USER enables GitHub Pages)
-- [x] AI generates privacy policy as `privacy/index.html` in the repo and pushes it
-- [ ] USER enables GitHub Pages: repo Settings → Pages → deploy from `main` branch, root `/` folder
-- [ ] Confirm the privacy policy URL is publicly accessible (e.g. `https://tobin00.github.io/forever-free-apps/privacy/`)
+- [x] AI generates privacy policy as `privacy/index.html` in the repo and pushes it (contact: makeitforeverfree@gmail.com)
+- [x] USER enabled GitHub Pages: repo made public, Settings → Pages → deploy from `main` branch, root `/` folder
+- [ ] Confirm the privacy policy URL is publicly accessible: `https://tobin00.github.io/forever-free-apps/privacy/` (may take a few minutes to propagate after enabling)
 
 ### Step 9.2 — Data Safety questionnaire (USER does this — requires Play Console access)
 - [ ] In Play Console: **App content → Data safety**
@@ -328,27 +328,29 @@ donation button in every app links directly to it.
 > **When to do this:** While waiting for Google's review in Step 11.4. Takes about 30–60 minutes.
 
 ### Step 12.1 — Create Ko-fi account (USER does this — requires their identity/payment info)
-- [ ] Go to https://ko-fi.com and sign up
-- [ ] Choose a handle — suggestion: `foreverFreeApps` or `foreverfreeapps`
-- [ ] Connect a payment method (PayPal or Stripe) for receiving donations
-- [ ] Note your Ko-fi page URL (e.g. `https://ko-fi.com/foreverFreeApps`)
+- [x] Ko-fi account created at https://ko-fi.com/foreverfreeapps
+- [ ] Connect a payment method (PayPal or Stripe) for receiving donations — do this when ready to accept donations
 
 ### Step 12.2 — Write Ko-fi page content (AI does this)
-- [ ] AI writes: page title, tagline, "About" bio for Forever Free Apps
-- [ ] AI writes: goal description (e.g. "Keep the apps free and ad-free forever")
-- [ ] AI writes: individual app descriptions for the Ko-fi page
-- [ ] All text will be provided ready to paste
+- [x] AI wrote: page title ("Forever Free Apps"), tagline ("Apps that are always free — no ads, no catch, ever.")
+- [x] AI wrote: "About" bio for Forever Free Apps (provided in chat session)
+- [x] AI wrote: individual app description for NATO Alphabet Trainer
+- [x] All text was provided ready to paste
 
 ### Step 12.3 — Fill out Ko-fi profile (USER pastes AI content, uploads images)
-- [ ] Paste bio and about text from Step 12.2
-- [ ] Profile photo: use the app icon or a simple Forever Free logo
-- [ ] Cover image: AI will describe the recommended spec (1200x400px); USER creates or sources image
-- [ ] Set a donation goal amount (suggestion: $50/month to cover hosting + dev tools)
+- [ ] USER pastes bio and about text (provided in previous chat session — scroll back or ask AI to regenerate)
+- [x] Profile photo generated by AI: `docs/nato_alphabet/kofi_assets/kofi_profile_800x800.png`
+  - Deep Ocean Blue gradient, white infinity symbol, amber $0 price tag, "FOREVER FREE APPS" label
+- [x] Cover image generated by AI: `docs/nato_alphabet/kofi_assets/kofi_banner_1200x400.png`
+  - Nunito Bold font, blue gradient, colorful tile grid (no letters), "Free apps built with care." tagline
+- [ ] USER uploads `kofi_profile_800x800.png` as profile photo on Ko-fi
+- [ ] USER uploads `kofi_banner_1200x400.png` as cover image on Ko-fi
+- [ ] Donation goal: optional — no goal is fine; Ko-fi works well without one
 
 ### Step 12.4 — Update donation button URL in the app (AI does this)
-- [ ] AI finds the donation button URL in the NATO Alphabet app source code
-- [ ] AI updates it to point to the new Ko-fi page URL
-- [ ] AI commits and pushes — Codemagic will auto-build the updated app
+- [x] AI updated `packages/shared_app_core/lib/constants/brand.dart`
+- [x] `donationUrl` changed from placeholder to `https://ko-fi.com/foreverfreeapps`
+- [x] Committed and pushed to GitHub
 
 ### ✅ Phase 12 Success Condition
 Ko-fi page is live and public. The donation button inside the app opens the Ko-fi page correctly.
@@ -517,7 +519,7 @@ Templates reflect everything learned from the first app.
 | Create app in Play Console | **User** (requires Play Console access) |
 | Enable GitHub Pages | **User** (one toggle in GitHub Settings) |
 | Complete store questionnaires (data safety, rating) | **User** (requires Play Console access) |
-| Take screenshots | **User** (requires running app + phone/emulator) |
+| Capture screenshots via emulator + adb | **AI** (done — 6 screenshots in docs/nato_alphabet/screenshots/) |
 | Create feature graphic | **User** (design tool, creative judgment) |
 | Promote builds to production | **User** (requires Play Console access) |
 | Install and QA test on real device | **User** (requires physical Android phone) |
@@ -528,7 +530,7 @@ Templates reflect everything learned from the first app.
 | Create Ko-fi account and connect payment | **User** (their identity + payment account) |
 | Upload images to Ko-fi (profile photo, cover) | **User** (design + their account) |
 | Deploy landing page to coziahr.com | **User** (requires domain/hosting access) |
-| Create Ko-fi cover image (1200x400px) | **User** (design tool) |
+| Generate Ko-fi profile photo + cover image | **AI** (done — files in docs/nato_alphabet/kofi_assets/) |
 | Apple Developer account + signing | **User** (requires $99/year + Mac) |
 
 ---
@@ -554,5 +556,5 @@ Templates reflect everything learned from the first app.
 
 ---
 
-*Last updated: 2026-03-31*
+*Last updated: 2026-04-01*
 *App version at time of writing: 1.0.0*
