@@ -127,8 +127,10 @@ class _ContactParagraphState extends State<_ContactParagraph> {
 
   Future<void> _launchEmail() async {
     final uri = Uri(scheme: 'mailto', path: Brand.contactEmail);
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri);
+    } catch (_) {
+      // No email client available — silently ignore
     }
   }
 

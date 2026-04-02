@@ -10,8 +10,10 @@ class DonationButton extends StatelessWidget {
 
   Future<void> _openDonationUrl() async {
     final uri = Uri.parse(Brand.donationUrl);
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      // No browser available — silently ignore
     }
   }
 
