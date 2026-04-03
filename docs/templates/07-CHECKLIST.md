@@ -94,6 +94,19 @@
 - [ ] Check for any crash reports (Play Console → Quality → Crashes)
 - [ ] Update docs/templates with any lessons learned
 
+## Website (Phase 9)
+
+*Only do this after the app is live in production on the store(s).*
+
+- [ ] App icon copied to `website/apps/{app_name}/icon.png`
+- [ ] 4–5 best phone screenshots copied to `website/apps/{app_name}/screenshots/`
+- [ ] App entry added to `website/apps.json` (see `08-WEBSITE.md` for schema)
+- [ ] `androidUrl` and `iosUrl` are correct live store links (not internal/draft)
+- [ ] Website verified locally (open `website/index.html` in browser)
+- [ ] Commit pushed — GitHub Actions deploy workflow completed successfully
+- [ ] Live site at `https://coziahr.com/foreverfree` shows the new app
+- [ ] User confirmed site looks correct on desktop and mobile
+
 ---
 
 ## Instructions for AI

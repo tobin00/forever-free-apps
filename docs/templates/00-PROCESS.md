@@ -288,7 +288,39 @@ For each user story:
    - `REQUIREMENTS.md` — reflects what was actually built
    - `STORE-LISTING.md` — reflects what was actually published
    - `CHECKLIST.md` — all items checked off
-4. Tell the user: "App is published. Documentation is updated. Ready for the next one."
+4. Tell the user: "App is published. Documentation is updated. Proceeding to Phase 9 (Website)."
+
+---
+
+### PHASE 9: WEBSITE
+
+**Read `docs/templates/08-WEBSITE.md` before starting.**
+
+Only do this phase after the app is **live on the app stores** (production, not just internal testing). The website should link to real store URLs.
+
+**What you do:**
+
+1. Prepare website assets for this app:
+   - Copy the app icon to `website/apps/{app_name}/icon.png`
+   - Copy the best 4–5 phone screenshots to `website/apps/{app_name}/screenshots/` (use store screenshots)
+   - Name them `01.png`, `02.png`, etc. in the order you want them displayed
+
+2. Add the app entry to `website/apps.json`:
+   - See `08-WEBSITE.md` for the exact JSON schema
+   - Fill in: `id`, `name`, `tagline`, `description`, `androidUrl`, `iosUrl` (null if not yet live), `screenshots` list
+   - Add to the end of the `apps` array (newest apps appear last — or first, TBD per `08-WEBSITE.md`)
+
+3. Verify the website looks correct locally by opening `website/index.html` in a browser
+
+4. Commit and push — GitHub Actions will auto-deploy to `coziahr.com/foreverfree`
+   - Check the Actions tab on GitHub to confirm the deploy workflow succeeded
+   - Verify the live site at `https://coziahr.com/foreverfree` shows the new app
+
+**Ask the user to:**
+- Confirm the live site looks correct and the store links work
+- Verify on mobile (the site must look good on phone)
+
+**Tell the user:** "All done. App is live on stores and on the website."
 
 ---
 
@@ -328,6 +360,8 @@ When implementing each feature, follow this loop:
 | Phase 2-4 (Build) | **Sonnet** | Execution within well-defined parameters |
 | Phase 5 (Review iterations) | **Sonnet** | Straightforward changes |
 | Phase 6-7 (CI/Publish) | **Sonnet** | Following documented steps |
+| Phase 8 (Document) | **Sonnet** | Straightforward doc updates |
+| Phase 9 (Website) | **Sonnet** | Following documented steps in 08-WEBSITE.md |
 | Debugging complex issues | **Opus** | Requires deep reasoning |
 | Updating template docs | **Opus** | Requires system-level thinking |
 
@@ -345,6 +379,16 @@ project-root/
 │   └── ...
 ├── packages/
 │   └── shared_app_core/        # Shared theme, widgets, About page
+├── website/                    # Static website at coziahr.com/foreverfree
+│   ├── index.html              # Main page (rendered from apps.json)
+│   ├── apps.json               # Data: one entry per published app
+│   ├── style.css
+│   ├── app.js
+│   ├── assets/
+│   └── apps/                   # One folder per app: icon.png + screenshots/
+├── .github/
+│   └── workflows/
+│       └── deploy-website.yml  # Auto-deploys website/ on push to main
 ├── docs/
 │   ├── templates/              # YOUR INSTRUCTIONS (read these, copy where noted)
 │   │   ├── 00-PROCESS.md                  # READ: this file (master instructions)
@@ -355,7 +399,8 @@ project-root/
 │   │   ├── 05-SIGNING-AND-SECRETS.md      # READ: signing walkthrough
 │   │   ├── 06-STORE-LISTING-TEMPLATE.md   # COPY → docs/{app}/ and fill in
 │   │   ├── 06-STORE-PUBLISHING.md         # READ: publishing process
-│   │   └── 07-CHECKLIST.md                # COPY → docs/{app}/ and fill in
+│   │   ├── 07-CHECKLIST.md                # COPY → docs/{app}/ and fill in
+│   │   └── 08-WEBSITE.md                  # READ: website maintenance guide
 │   ├── nato_alphabet/
 │   │   ├── REQUIREMENTS.md     # Filled in for this app
 │   │   ├── STORE-LISTING.md    # Filled in for this app
