@@ -51,27 +51,34 @@ website/apps/{app_name}/screenshots/02.png
 - Use phone screenshots already created for the store listing
 - 4–5 screenshots is ideal; rename them `01.png`, `02.png`, ... in display order
 
-### Step 2 — Add entry to `apps.json`
+### Step 2 — Add entry to `apps-data.js`
 
-```json
+Open `website/apps-data.js` and append a new object to the `APPS_DATA.apps` array:
+
+```js
 {
-  "id": "nato_alphabet",
-  "name": "NATO Alphabet Trainer",
-  "tagline": "Learn the phonetic alphabet — free, offline, ad-free.",
-  "description": "Master the NATO phonetic alphabet with interactive letter and word quizzes. No ads, no tracking, works completely offline.",
-  "androidUrl": "https://play.google.com/store/apps/details?id=com.coziahr.nato_alphabet",
-  "iosUrl": null,
-  "screenshots": [
-    "apps/nato_alphabet/screenshots/01.png",
-    "apps/nato_alphabet/screenshots/02.png",
-    "apps/nato_alphabet/screenshots/03.png",
-    "apps/nato_alphabet/screenshots/04.png"
+  id: "app_name",
+  name: "My App Name",
+  tagline: "One-line description — free, offline, ad-free.",
+  description: "First paragraph.\n\nSecond paragraph.\n\nThird paragraph.",
+  androidUrl: "https://play.google.com/store/apps/details?id=com.foreverfree.app_name",
+  iosUrl: null,   // set to the App Store URL once live, or leave null
+  screenshots: [
+    { src: "apps/app_name/screenshots/01.png", w: 1080, h: 2400, alt: "Description of screenshot 1" },
+    { src: "apps/app_name/screenshots/02.png", w: 1080, h: 2400, alt: "Description of screenshot 2" },
+    { src: "apps/app_name/screenshots/03.png", w: 1080, h: 2400, alt: "Description of screenshot 3" },
+    { src: "apps/app_name/screenshots/04.png", w: 1080, h: 2400, alt: "Description of screenshot 4" },
+    { src: "apps/app_name/screenshots/05.png", w: 1080, h: 2400, alt: "Description of screenshot 5" }
   ]
 }
 ```
 
-- Set `iosUrl` to `null` if not yet on iOS; the iOS badge will be hidden automatically
-- Append new apps to the end of the `apps` array (newest at bottom, or reverse order — follow whatever order is established in the live site)
+- Set `iosUrl` to `null` if not yet on iOS; the iOS badge is hidden automatically
+- Append to the end of the array (oldest app first)
+- Use `\n\n` to separate paragraphs in the description field
+
+> **Note:** The data lives in `apps-data.js` (not `apps.json`) so the page works when opened
+> directly as a local file (`file://`) as well as when served over HTTP.
 
 ### Step 3 — Verify locally
 

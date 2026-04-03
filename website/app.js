@@ -95,20 +95,11 @@ function buildCard(app) {
 }
 
 // ── Render all app cards ──────────────────────────────────
-async function renderApps() {
+function renderApps() {
   const list = document.getElementById('app-list');
   if (!list) return;
 
-  let data;
-  try {
-    const res = await fetch('apps.json');
-    data = await res.json();
-  } catch (e) {
-    list.innerHTML = '<p style="color:var(--text-secondary)">Could not load app list.</p>';
-    return;
-  }
-
-  data.apps.forEach(app => list.appendChild(buildCard(app)));
+  APPS_DATA.apps.forEach(app => list.appendChild(buildCard(app)));
 
   // ── Init PhotoSwipe for every gallery on the page ─────
   const lightbox = new PhotoSwipeLightbox({
