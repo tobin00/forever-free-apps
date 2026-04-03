@@ -13,13 +13,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check secrets are configured
+        id: check
+        run: |
+          if [ -z "${{ secrets.DEPLOY_SSH_HOST }}" ]; then
+            echo "DEPLOY_SSH_HOST secret is not set — skipping deploy."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Deploy via rsync over SSH
+        if: steps.check.outputs.skip == 'false'
         env:
           SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
           SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
         run: |
-          # Write private key to temp file
           echo "$SSH_KEY" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
 
