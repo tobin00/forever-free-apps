@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "7821", "--directory", "design_review"],
       "port": 7821
+    },
+    {
+      "name": "website",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "7822", "--directory", "website"],
+      "port": 7822
     }
   ]
 }

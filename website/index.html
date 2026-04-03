@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForeverFree Apps — Free, Ad-Free Mobile Apps</title>
+  <meta name="description" content="Free, ad-free, tracking-free mobile apps. Built with care in the spirit of early internet shareware.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Sora:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- PhotoSwipe -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── HERO ─────────────────────────────────────────── -->
+  <header class="hero">
+    <img src="assets/banner.png" alt="ForeverFree banner" class="hero-banner">
+    <div class="hero-overlay">
+      <h1 class="hero-title">ForeverFree</h1>
+      <p class="hero-tagline">Free apps, no ads, no tracking.<br>Just useful tools made with care.</p>
+    </div>
+  </header>
+
+  <!-- ── PHILOSOPHY ────────────────────────────────────── -->
+  <section class="philosophy">
+    <div class="container">
+      <h2>Our Philosophy</h2>
+      <p>In the early days of the internet, people made software because they wanted to help others. No subscription traps, no ad-surveillance, no dark patterns — just useful tools shared freely.</p>
+      <p>We're bringing that spirit back. Every app in this collection is completely free, contains no ads, collects no data, and requires no internet connection to use. They exist to be genuinely useful, nothing more.</p>
+      <p>These apps will always be free. If you find them useful and want to help cover the cost of keeping them available, donations are welcome but never expected.</p>
+      <a href="https://ko-fi.com/foreverfreeapps" class="donate-link" target="_blank" rel="noopener">Support on Ko-fi ☕</a>
+    </div>
+  </section>
+
+  <!-- ── APP CATALOG ───────────────────────────────────── -->
+  <section class="catalog">
+    <div class="container">
+      <h2>Our Apps</h2>
+      <div class="app-list" id="app-list">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Made with care &mdash; no ads, no tracking, no data collection.</p>
+      <p class="footer-secondary">
+        <a href="https://ko-fi.com/foreverfreeapps" target="_blank" rel="noopener">Ko-fi</a>
+        &nbsp;&middot;&nbsp;
+        <a href="mailto:support@coziahr.com">Contact</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
