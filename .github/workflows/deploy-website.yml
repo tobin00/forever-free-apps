@@ -33,10 +33,12 @@ jobs:
           echo "$SSH_KEY" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
 
-          # Sync website/ → public_html/foreverfree/ on the server
+          # Sync website/ → coziahr.com/foreverfree/ on the server.
+          # The deploy key uses rrsync to jail access to that directory,
+          # so no remote path is specified — rrsync enforces it server-side.
           rsync -avz --delete \
             -e "ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no" \
             website/ \
-            ${SSH_USER}@${SSH_HOST}:public_html/foreverfree/
+            ${SSH_USER}@${SSH_HOST}:
 
           rm /tmp/deploy_key
