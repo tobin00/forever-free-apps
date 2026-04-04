@@ -16,7 +16,7 @@
 - ⬜ Phase 10: First release to internal testing
 - ⬜ Phase 11: Promote to production (Android)
 - ✅ **Phase 12 COMPLETE:** Ko-fi page live at https://ko-fi.com/foreverfreeapps. Profile photo, cover image, and bio all uploaded. Donation URL live in app.
-- ⬜ Phase 13: Landing page on coziahr.com (do while waiting for Google review)
+- ✅ **Phase 13 COMPLETE:** Website live at https://coziahr.com/foreverfree. Auto-deploys via GitHub Actions on push.
 - ⬜ Phase 14: iOS setup and release (deferred — start after Android is live)
 - ⬜ Phase 15: Final documentation & cleanup
 
@@ -548,5 +548,5 @@ Templates reflect everything learned from the first app.
 
 ---
 
-*Last updated: 2026-04-01 (evening)*
+*Last updated: 2026-04-04*
 *App version at time of writing: 1.0.0*
