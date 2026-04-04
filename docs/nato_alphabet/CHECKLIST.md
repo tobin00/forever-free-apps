@@ -85,6 +85,18 @@
 
 ---
 
+## Website (Phase 9)
+
+- [x] App icon copied to `website/apps/nato_alphabet/icon.png`
+- [x] 5 phone screenshots copied to `website/apps/nato_alphabet/screenshots/`
+- [x] App entry added to `website/apps-data.js`
+- [x] `androidUrl` is correct live store link
+- [x] `iosUrl` is null (iOS not yet live)
+- [x] Website verified locally and in Chrome
+- [x] Commit pushed — GitHub Actions deploy workflow completed successfully
+- [x] Live site at `https://coziahr.com/foreverfree` confirmed working
+- [ ] User confirmed site looks correct on desktop and mobile
+
 ## Post-Launch
 
 - [ ] Verify store listing is live and accurate
