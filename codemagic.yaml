@@ -23,13 +23,10 @@ workflows:
       # With a single app in the repo, every push to main triggers this workflow.
 
     scripts:
-      # Navigate to the app directory and extract version info
+      # Navigate to the app directory
       - name: Set working directory
         script: |
           echo "APP_DIR=$CM_BUILD_DIR/apps/nato_alphabet" >> $CM_ENV
-          # Extract versionName (e.g. "1.1.0") from pubspec.yaml for the Play Store release name
-          APP_VERSION=$(grep '^version:' $CM_BUILD_DIR/apps/nato_alphabet/pubspec.yaml | sed 's/version: //' | cut -d'+' -f1)
-          echo "APP_VERSION=$APP_VERSION" >> $CM_ENV
 
       # Get dependencies for shared package first
       - name: Get shared package dependencies
@@ -83,7 +80,6 @@ workflows:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
         track: internal    # Start with internal testing track
         submit_as_draft: true
-        release_name: $APP_VERSION  # e.g. "1.1.0" — matches pubspec.yaml versionName
 
   # ============================
   # NATO Alphabet - iOS (DEFERRED)
