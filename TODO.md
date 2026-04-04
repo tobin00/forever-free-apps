@@ -11,7 +11,7 @@
 - ✅ **Phase 1–5 COMPLETE:** App is built, tested, and approved.
 - ✅ **Phase 6 COMPLETE:** Code on GitHub (public repo), no secrets committed.
 - ✅ **Phase 7 COMPLETE:** Keystore generated, backed up, release build verified.
-- 🔄 **Phase 8 IN PROGRESS:** All 5 env vars in Codemagic. App created in Play Console ("NATO Phonetic Alphabet Trainer"). Service account created in Google Cloud, invited in Play Console with testing + production release permissions. Ready to trigger first build.
+- 🔄 **Phase 8 IN PROGRESS:** All 5 env vars in Codemagic. App created in Play Console ("NATO Phonetic Alphabet Trainer"). Service account created in Google Cloud, invited in Play Console with testing + production release permissions. Version bumped to 1.1.0+2, push triggered Codemagic build — awaiting build pass + Play Console upload confirmation.
 - ✅ **Phase 9 COMPLETE:** Store listing complete. All screenshots (phone, 7", 10"), feature graphic, icon uploaded. Privacy policy live. Data safety and content rating filled in.
 - ⬜ Phase 10: First release to internal testing
 - ⬜ Phase 11: Promote to production (Android)
@@ -171,7 +171,7 @@ This step is needed before the CI pipeline can publish (Play API needs an app to
 - [ ] Note the package name shown — it must match `applicationId` in `build.gradle`
 
 ### Step 8.8 — Trigger first CI build (AI pushes trigger commit)
-- [ ] AI pushes a small change to `main` to trigger Codemagic
+- [x] AI bumped version to `1.1.0+2` and pushed to `main` to trigger Codemagic (2026-04-04)
 - [ ] USER watches the build in the Codemagic dashboard
 - [ ] Verify each stage passes: Analyze ✅ → Tests ✅ → Build ✅ → Publish ✅
 - [ ] Confirm the build artifact (`.aab`) is downloadable from Codemagic
