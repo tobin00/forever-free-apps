@@ -7,11 +7,10 @@ import '../theme/app_colors.dart';
 import 'donation_button.dart';
 
 /// Shared About page used by every Forever Free app.
-/// Pass [appName], [appVersion], and optionally an [iconWidget] to replace
+/// Pass [appName] and optionally an [iconWidget] to replace
 /// the default placeholder with the app's real icon.
 class AboutPage extends StatelessWidget {
   final String appName;
-  final String appVersion;
   /// Optional icon displayed at the top. If omitted, a generic placeholder
   /// is shown. Pass e.g. `Image.asset('assets/icon/icon.png')` from the app.
   final Widget? iconWidget;
@@ -19,7 +18,6 @@ class AboutPage extends StatelessWidget {
   const AboutPage({
     super.key,
     required this.appName,
-    required this.appVersion,
     this.iconWidget,
   });
 
@@ -59,11 +57,6 @@ class AboutPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(appName, style: theme.textTheme.headlineMedium),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Version $appVersion',
-                    style: theme.textTheme.bodySmall,
-                  ),
                 ],
               ),
             ),
@@ -128,7 +121,7 @@ class _ContactParagraphState extends State<_ContactParagraph> {
   Future<void> _launchEmail() async {
     final uri = Uri(scheme: 'mailto', path: Brand.contactEmail);
     try {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } catch (_) {
       // No email client available — silently ignore
     }

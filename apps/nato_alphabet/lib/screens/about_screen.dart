@@ -8,7 +8,6 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AboutPage(
       appName: 'Forever Free: NATO Alphabet',
-      appVersion: '1.0.0',
       iconWidget: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(
