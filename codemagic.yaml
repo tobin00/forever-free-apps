@@ -11,7 +11,7 @@ workflows:
       flutter: stable
       java: 17
       groups:
-        - android_credentials    # Keystore + Play Store creds
+        - android_credentials    # Keystore + Play Store creds + CM_API_KEY
 
     triggering:
       events:
@@ -19,40 +19,63 @@ workflows:
       branch_patterns:
         - pattern: 'main'
           include: true
-      # Note: path_patterns is not supported by Codemagic.
-      # With a single app in the repo, every push to main triggers this workflow.
 
     scripts:
-      # Navigate to the app directory
+      # ------------------------------------------------------------------
+      # PATH FILTER: cancel this build if nothing relevant changed.
+      # Codemagic doesn't support path_patterns in triggering, so we do it
+      # here. Requires CM_API_KEY in the android_credentials env group
+      # (Codemagic UI → User Settings → Integrations → Codemagic API).
+      # ------------------------------------------------------------------
+      - name: Check if nato_alphabet changed
+        script: |
+          CHANGED=$(git diff --name-only "$CM_PREVIOUS_COMMIT" "$CM_COMMIT" 2>/dev/null \
+                    || git diff --name-only HEAD~1 HEAD 2>/dev/null \
+                    || echo "")
+
+          if [ -z "$CHANGED" ]; then
+            echo "Could not determine changed files (first push?) — proceeding."
+            exit 0
+          fi
+
+          echo "Files changed in this push:"
+          echo "$CHANGED"
+
+          if echo "$CHANGED" | grep -qE "^(apps/nato_alphabet|packages/shared_app_core)/"; then
+            echo "Relevant changes detected — proceeding with build."
+          else
+            echo "No changes to apps/nato_alphabet or packages/shared_app_core — cancelling build."
+            curl -s -X POST \
+              -H "x-auth-token: $CM_API_KEY" \
+              "https://api.codemagic.io/builds/$CM_BUILD_ID/cancel"
+            sleep 30
+            exit 0
+          fi
+
       - name: Set working directory
         script: |
           echo "APP_DIR=$CM_BUILD_DIR/apps/nato_alphabet" >> $CM_ENV
 
-      # Get dependencies for shared package first
       - name: Get shared package dependencies
         script: |
           cd $CM_BUILD_DIR/packages/shared_app_core
           flutter pub get
 
-      # Get app dependencies
       - name: Get app dependencies
         script: |
           cd $APP_DIR
           flutter pub get
 
-      # Static analysis
       - name: Analyze
         script: |
           cd $APP_DIR
           flutter analyze --no-fatal-infos
 
-      # Run unit and widget tests (integration tests run locally, not in CI)
       - name: Run unit and widget tests
         script: |
           cd $APP_DIR
           flutter test --coverage
 
-      # Set up Android signing
       - name: Set up Android signing
         script: |
           cd $APP_DIR
@@ -64,7 +87,6 @@ workflows:
           keyPassword=$CM_KEY_PASSWORD
           EOF
 
-      # Build release AAB (Android App Bundle)
       - name: Build Android App Bundle
         script: |
           cd $APP_DIR
@@ -78,12 +100,16 @@ workflows:
     publishing:
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal    # Start with internal testing track
+        track: internal
         submit_as_draft: true
 
   # ============================
   # Country Flags - Android
   # ============================
+  # NO triggering block — manual builds only until the app is ready.
+  # To trigger: Codemagic dashboard → country-flags-android → Start build.
+  # When the app is ready to ship, add the triggering block + path filter
+  # (copy the pattern from nato-alphabet-android above).
   country-flags-android:
     name: Country Flags - Android
     max_build_duration: 30
@@ -93,16 +119,7 @@ workflows:
       flutter: stable
       java: 17
       groups:
-        - android_credentials    # Keystore + Play Store creds
-
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: 'main'
-          include: true
-      # Note: path_patterns is not supported by Codemagic.
-      # Every push to main triggers all workflows.
+        - android_credentials
 
     scripts:
       - name: Set working directory
@@ -232,10 +249,9 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.foreverfree.natoalphabet
 
-    # NO triggering block here intentionally — iOS builds are MANUAL ONLY until
-    # the Apple Developer account and Codemagic integration are fully configured.
-    # To run: go to Codemagic dashboard → select nato-alphabet-ios → Start build.
-    # Once Steps 14.4–14.9 are complete, restore the triggering block to match Android.
+    # NO triggering block — iOS builds are MANUAL ONLY until Apple Developer
+    # account and Codemagic integration are fully configured.
+    # To run: Codemagic dashboard → nato-alphabet-ios → Start build.
 
     scripts:
       - name: Get shared package dependencies
