@@ -82,6 +82,136 @@ workflows:
         submit_as_draft: true
 
   # ============================
+  # Country Flags - Android
+  # ============================
+  country-flags-android:
+    name: Country Flags - Android
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+
+    environment:
+      flutter: stable
+      java: 17
+      groups:
+        - android_credentials    # Keystore + Play Store creds
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+      # Note: path_patterns is not supported by Codemagic.
+      # Every push to main triggers all workflows.
+
+    scripts:
+      - name: Set working directory
+        script: |
+          echo "APP_DIR=$CM_BUILD_DIR/apps/country_flags" >> $CM_ENV
+
+      - name: Get shared package dependencies
+        script: |
+          cd $CM_BUILD_DIR/packages/shared_app_core
+          flutter pub get
+
+      - name: Get app dependencies
+        script: |
+          cd $APP_DIR
+          flutter pub get
+
+      - name: Analyze
+        script: |
+          cd $APP_DIR
+          flutter analyze --no-fatal-infos
+
+      - name: Run unit and widget tests
+        script: |
+          cd $APP_DIR
+          flutter test --coverage
+
+      - name: Set up Android signing
+        script: |
+          cd $APP_DIR
+          echo $CM_KEYSTORE_COUNTRY_FLAGS | base64 --decode > $CM_BUILD_DIR/keystore_country_flags.jks
+          cat > android/key.properties <<EOF
+          storeFile=$CM_BUILD_DIR/keystore_country_flags.jks
+          storePassword=$CM_KEYSTORE_PASSWORD_COUNTRY_FLAGS
+          keyAlias=$CM_KEY_ALIAS_COUNTRY_FLAGS
+          keyPassword=$CM_KEY_PASSWORD_COUNTRY_FLAGS
+          EOF
+
+      - name: Build Android App Bundle
+        script: |
+          cd $APP_DIR
+          flutter build appbundle --release \
+            --build-number=$PROJECT_BUILD_NUMBER
+
+    artifacts:
+      - apps/country_flags/build/**/outputs/**/*.aab
+      - apps/country_flags/build/**/outputs/**/mapping.txt
+
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true
+
+  # ============================
+  # Country Flags - iOS (DEFERRED)
+  # ============================
+  # Uncomment and configure when ready for iOS
+  #
+  # country-flags-ios:
+  #   name: Country Flags - iOS
+  #   max_build_duration: 60
+  #   instance_type: mac_mini_m2
+  #   integrations:
+  #     app_store_connect: foreverfree_apple
+  #   environment:
+  #     flutter: stable
+  #     xcode: latest
+  #     cocoapods: default
+  #     groups:
+  #       - ios_credentials
+  #     ios_signing:
+  #       distribution_type: app_store
+  #       bundle_identifier: com.foreverfree.country_flags
+  #   scripts:
+  #     - name: Get shared package dependencies
+  #       script: |
+  #         cd $CM_BUILD_DIR/packages/shared_app_core
+  #         flutter pub get
+  #     - name: Get app dependencies
+  #       script: |
+  #         cd $CM_BUILD_DIR/apps/country_flags
+  #         flutter pub get
+  #     - name: Install CocoaPods dependencies
+  #       script: |
+  #         cd $CM_BUILD_DIR/apps/country_flags/ios
+  #         pod install
+  #     - name: Analyze
+  #       script: |
+  #         cd $CM_BUILD_DIR/apps/country_flags
+  #         flutter analyze --no-fatal-infos
+  #     - name: Run unit and widget tests
+  #       script: |
+  #         cd $CM_BUILD_DIR/apps/country_flags
+  #         flutter test --coverage
+  #     - name: Build iOS IPA
+  #       script: |
+  #         cd $CM_BUILD_DIR/apps/country_flags
+  #         flutter build ipa --release \
+  #           --build-number=$PROJECT_BUILD_NUMBER \
+  #           --export-options-plist=/Users/builder/export_options.plist
+  #   artifacts:
+  #     - apps/country_flags/build/ios/ipa/*.ipa
+  #   publishing:
+  #     app_store_connect:
+  #       auth: integration
+  #       submit_to_testflight: true
+  #       expire_build_submitted_for_review: true
+
+  # ============================
   # NATO Alphabet - iOS
   # ============================
   nato-alphabet-ios:
