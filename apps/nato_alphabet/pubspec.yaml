@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^3.3.1
   go_router: ^17.1.0
+  audioplayers: ^6.0.0
+  shared_preferences: ^2.2.0
+  url_launcher: ^6.2.0
   shared_app_core:
     path: ../../packages/shared_app_core
 
@@ -34,3 +37,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icon/
+    - assets/audio/

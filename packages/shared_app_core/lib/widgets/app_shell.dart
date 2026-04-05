@@ -23,6 +23,9 @@ class AppShell extends StatelessWidget {
   final ValueChanged<int> onDestinationSelected;
   final VoidCallback? onAboutTap;
 
+  /// Additional icon buttons inserted in the AppBar before the About button.
+  final List<Widget>? extraActions;
+
   const AppShell({
     super.key,
     required this.child,
@@ -31,6 +34,7 @@ class AppShell extends StatelessWidget {
     required this.selectedIndex,
     required this.onDestinationSelected,
     this.onAboutTap,
+    this.extraActions,
   });
 
   @override
@@ -39,6 +43,7 @@ class AppShell extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
+          ...?extraActions,
           if (onAboutTap != null)
             IconButton(
               icon: const Icon(Icons.info_outline),

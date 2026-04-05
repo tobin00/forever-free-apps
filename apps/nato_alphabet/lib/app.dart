@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_app_core/shared_app_core.dart';
 
+import 'providers/theme_mode_provider.dart';
 import 'screens/about_screen.dart';
 import 'screens/letter_quiz_screen.dart';
 import 'screens/reference_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/word_quiz_screen.dart';
 
-class NatoAlphabetApp extends StatelessWidget {
+class NatoAlphabetApp extends ConsumerWidget {
   const NatoAlphabetApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
     return MaterialApp.router(
       title: 'Forever Free: NATO Alphabet',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       routerConfig: _router,
     );
   }
@@ -52,6 +56,13 @@ final _router = GoRouter(
               label: 'Word Quiz',
             ),
           ],
+          extraActions: [
+            IconButton(
+              icon: const Icon(Icons.settings_outlined),
+              tooltip: 'Settings',
+              onPressed: () => context.push('/settings'),
+            ),
+          ],
           onDestinationSelected: (index) {
             const routes = ['/reference', '/letter-quiz', '/word-quiz'];
             context.go(routes[index]);
@@ -78,6 +89,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/about',
       builder: (_, __) => const AboutScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (_, __) => const SettingsScreen(),
     ),
   ],
 );
