@@ -102,12 +102,10 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.foreverfree.natoalphabet
 
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: 'main'
-          include: true
+    # NO triggering block here intentionally — iOS builds are MANUAL ONLY until
+    # the Apple Developer account and Codemagic integration are fully configured.
+    # To run: go to Codemagic dashboard → select nato-alphabet-ios → Start build.
+    # Once Steps 14.4–14.9 are complete, restore the triggering block to match Android.
 
     scripts:
       - name: Get shared package dependencies
