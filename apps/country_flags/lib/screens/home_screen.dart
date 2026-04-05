@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// TODO: Implement the home screen once requirements are approved.
+// Placeholder screen — implementation begins after requirements are approved (Phase 1).
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
