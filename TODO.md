@@ -17,7 +17,7 @@
 - ⬜ Phase 11: Promote to production (Android)
 - ✅ **Phase 12 COMPLETE:** Ko-fi page live at https://ko-fi.com/foreverfreeapps. Profile photo, cover image, and bio all uploaded. Donation URL live in app.
 - ✅ **Phase 13 COMPLETE:** Website live at https://coziahr.com/foreverfree. Auto-deploys via GitHub Actions on push.
-- ⬜ Phase 14: iOS setup and release (deferred — start after Android is live)
+- 🔄 **Phase 14 IN PROGRESS:** iOS plan complete. Waiting on Apple Developer enrollment. See Phase 14 for full step-by-step plan.
 - ⬜ Phase 15: Final documentation & cleanup
 
 ---
@@ -404,61 +404,301 @@ A future app can be added by dropping in a `metadata.yaml` and tagging a release
 
 ---
 
-## Phase 14: iOS Setup and Release (Deferred)
+## Phase 14: iOS Setup and Release
 
 **Start this phase ONLY after Android is successfully live and you are ready.**
 
-> iOS requires a Mac (or Mac cloud instance) for building and submitting.
-> It also requires an Apple Developer account ($99/year).
+---
 
-### Step 14.1 — Prerequisites (USER arranges)
-- [ ] Apple Developer Program enrollment: https://developer.apple.com/programs/
-  - $99/year fee
-  - Identity verification required (may take a few days)
-- [ ] Access to a Mac: borrow one, or use a cloud Mac service (e.g., MacStadium, AWS EC2 Mac)
-- [ ] Xcode installed on the Mac (free from Mac App Store)
+### iOS vs. Android: Key Differences (READ FIRST)
 
-### Step 14.2 — iOS Flutter configuration (AI does this)
-- [ ] Update `pubspec.yaml`: set `ios: true` in `flutter_launcher_icons`
-- [ ] Update `codemagic.yaml`: uncomment and configure the iOS workflow
-- [ ] Set minimum iOS deployment target in `ios/Podfile` and Xcode project: **iOS 13.0**
-- [ ] Verify no Android-specific code exists that would break iOS
+| Topic | Android | iOS |
+|-------|---------|-----|
+| Developer fee | $25 one-time | $99/year |
+| Beta tester requirement before production | **12 testers for 14 days** | **None — can skip straight to production** |
+| CI/CD signing | Keystore file + key.properties | App Store Connect API key (3 env vars) |
+| Need a physical Mac? | No | **No** — Codemagic handles all signing via API |
+| AWS EC2 Mac (if needed) | N/A | 24-hour minimum billing, $15.60+ minimum, no Xcode pre-installed |
+| Bundle ID format | `com.foreverfree.nato_alphabet` (underscores OK) | `com.foreverfree.natoalphabet` (no underscores allowed) |
+| Screenshot requirement | Phone + 7" + 10" | iPhone 6.9" required; iPad 13" required if iPad supported |
+| Age rating | Self-reported (PEGI 3 for this app) | Self-reported (4+ for this app) |
+| Review time | 1–3 days | 24–72 hours |
 
-### Step 14.3 — iOS signing setup (USER does this on a Mac, with AI guidance)
-- [ ] Create App ID in Apple Developer portal
-- [ ] Create Distribution Certificate in Keychain Access on Mac
-- [ ] Create App Store Provisioning Profile
-- [ ] Upload `.p12` certificate and provisioning profile to Codemagic
-  - OR use Codemagic's automatic code signing (simpler, recommended)
+> **Good news:** You do NOT need a Mac to build and ship the iOS app.
+> Codemagic's Mac build machines handle everything. A Mac is only needed
+> for interactive debugging or running the iOS Simulator — both of which
+> are optional until you hit a problem.
 
-### Step 14.4 — Create app in App Store Connect (USER does this)
+---
+
+### Step 14.1 — Apple Developer Program Enrollment (USER does this — one-time)
+
+> ⚠️ This step has a variable wait time. Start it as early as possible — it can take up to 4 weeks.
+
+- [ ] Go to https://developer.apple.com/programs/enroll/
+- [ ] Sign in with your Apple ID (create one if needed)
+- [ ] Choose: **Individual** (not Organization — much faster, no D-U-N-S number needed)
+- [ ] Provide legal name, address, phone number
+- [ ] Complete identity verification (takes 1–4 business days)
+- [ ] Pay **$99 USD/year** enrollment fee
+- [ ] Wait for approval email (typically 24–72 hours after payment)
+- [ ] Once approved, confirm access to: https://developer.apple.com — you should see "Certificates, Identifiers & Profiles"
+- [ ] Also confirm access to: https://appstoreconnect.apple.com
+
+### Step 14.2 — Add iOS Platform to the Flutter Project (AI does this)
+
+The project was built without an `ios/` directory. This step generates it.
+
+- [ ] AI runs `flutter create --platforms=ios .` in `apps/nato_alphabet/`
+- [ ] Verify `ios/` directory was created with expected structure:
+  - `ios/Runner/`, `ios/Runner.xcodeproj/`, `ios/Podfile`, `ios/Runner/Info.plist`
+- [ ] AI commits and pushes the new `ios/` directory to GitHub
+- [ ] Note: The bundle ID generated will be `com.foreverfree.nato_alphabet` — we must fix this in the next step (iOS does not allow underscores in bundle IDs)
+
+### Step 14.3 — Configure iOS Bundle ID and Minimum Deployment Target (AI does this)
+
+> The iOS bundle ID must not contain underscores. We use `com.foreverfree.natoalphabet`.
+
+- [ ] AI updates `ios/Runner.xcodeproj/project.pbxproj`: replace all occurrences of `com.foreverfree.nato_alphabet` with `com.foreverfree.natoalphabet`
+- [ ] AI updates `ios/Runner/Info.plist`: verify `CFBundleIdentifier` is `$(PRODUCT_BUNDLE_IDENTIFIER)` (uses Xcode variable — should be fine by default)
+- [ ] AI updates `ios/Podfile`: set minimum deployment target to `platform :ios, '13.0'`
+- [ ] AI updates `pubspec.yaml`: change `ios: false` to `ios: true` in `flutter_launcher_icons` section
+- [ ] AI runs `dart run flutter_launcher_icons` to generate iOS app icons
+- [ ] AI commits all changes and pushes to GitHub
+
+### Step 14.4 — Create App ID in Apple Developer Portal (USER does this)
+
+> This creates the official "slot" that Apple uses to identify your app.
+
+- [ ] Go to https://developer.apple.com/account/resources/identifiers/list
+- [ ] Click the **"+"** button → select **App IDs** → select **App** type
+- [ ] Description: `NATO Phonetic Alphabet Trainer`
+- [ ] Bundle ID: choose **Explicit** → enter: `com.foreverfree.natoalphabet`
+- [ ] Capabilities: enable nothing extra (no Push Notifications, no Sign in with Apple needed)
+- [ ] Click **Register**
+- [ ] The App ID now appears in your identifiers list — this is all you need from the Developer Portal for a basic app
+
+### Step 14.5 — Create App Record in App Store Connect (USER does this)
+
+> The app record must exist in App Store Connect before Codemagic can publish to it.
+> Creating this record is just filling in basic info — it does NOT submit the app for review yet.
+
 - [ ] Go to https://appstoreconnect.apple.com
-- [ ] Create a new App with bundle ID matching `android/app/build.gradle` applicationId
-- [ ] Fill in App Store listing (use `docs/nato_alphabet/STORE-LISTING.md` — Apple section)
-- [ ] Complete Privacy Nutrition Labels (same answers as Play Store data safety)
+- [ ] Click **"+"** → **New App**
+- [ ] Platform: **iOS**
+- [ ] Name: `NATO Phonetic Alphabet Trainer` (exactly 30 characters — fits Apple's limit)
+- [ ] Primary Language: **English (U.S.)**
+- [ ] Bundle ID: select `com.foreverfree.natoalphabet` (from Step 14.4)
+- [ ] SKU: `nato-alphabet-ios` (internal identifier — users never see this)
+- [ ] User Access: **Full Access**
+- [ ] Click **Create**
+- [ ] Note the **App ID number** shown in the App Information page (a 10-digit number like `6740123456`) — needed for Codemagic env vars
 
-### Step 14.5 — iOS screenshots (USER captures)
-Apple requires multiple screenshot sizes:
-- [ ] iPhone 6.7" (1290x2796 or 1320x2868)
-- [ ] iPhone 6.5" (1242x2688) — required if supporting older devices
-- [ ] iPad 12.9" (2048x2732) — required if app supports iPad
-- [ ] Use the same clean emulator approach as Android
+### Step 14.6 — Generate App Store Connect API Key (USER does this)
 
-### Step 14.6 — First iOS build and TestFlight (AI triggers, USER tests)
-- [ ] Push to `main` with iOS workflow active
-- [ ] Codemagic builds `.ipa` and uploads to TestFlight
-- [ ] Install from TestFlight on your iPad for testing
-- [ ] Verify all screens, both light/dark mode, accessibility
+> This is the iOS equivalent of the Google Cloud service account. It lets Codemagic
+> publish to App Store Connect without you needing to be present.
+> ⚠️ The `.p8` key file can only be downloaded ONCE. Save it immediately after download.
 
-### Step 14.7 — Submit for App Store review (USER does this)
-- [ ] In App Store Connect: select the TestFlight build for production
-- [ ] Submit for review
-- [ ] Apple review typically takes **1–3 days** for new apps
-- [ ] Respond promptly if Apple requests changes
+- [ ] Go to https://appstoreconnect.apple.com/access/integrations/api
+- [ ] Under **App Store Connect API**, click **Generate API Key** (or **"+"** button)
+- [ ] Name: `Codemagic Publisher`
+- [ ] Access (role): **App Manager**
+- [ ] Click **Generate**
+- [ ] **Immediately download the `.p8` file** — save to `C:\Users\tcozi\Dropbox\private\ioskeys\`
+- [ ] Note the **Key ID** (10-character string like `ABCD123456`)
+- [ ] Note the **Issuer ID** (UUID format, shown at the top of the page like `12345678-1234-1234-1234-123456789012`)
+- [ ] Save all three values (Key ID, Issuer ID, .p8 contents) in your password manager
+
+### Step 14.7 — Add iOS Environment Variables to Codemagic (USER does this)
+
+- [ ] In Codemagic: **Teams → Environment variables → Add group** named `ios_credentials`
+- [ ] Add and mark each as **Secure**:
+  - [ ] `APP_STORE_CONNECT_KEY_IDENTIFIER` = Key ID from Step 14.6 (e.g., `ABCD123456`)
+  - [ ] `APP_STORE_CONNECT_ISSUER_ID` = Issuer ID from Step 14.6 (UUID format)
+  - [ ] `APP_STORE_CONNECT_PRIVATE_KEY` = **Full contents** of the `.p8` file (open in Notepad, copy everything including `-----BEGIN PRIVATE KEY-----` header and footer)
+- [ ] Verify all 3 variables are in the `ios_credentials` group
+
+### Step 14.8 — Enable and Configure the iOS Workflow in Codemagic (AI does this)
+
+- [ ] AI uncomments and fully configures the `nato-alphabet-ios` workflow in `codemagic.yaml`:
+  - Instance type: `mac_mini_m2`
+  - Xcode: latest (Xcode 16+ required by Apple as of April 2025)
+  - Environment groups: `ios_credentials`
+  - Scripts: `flutter pub get`, `flutter analyze`, `flutter test`, `flutter build ipa --release`
+  - Signing: `ios_signing` block with `distribution_type: app_store` and `bundle_identifier: com.foreverfree.natoalphabet`
+  - Publishing: `app_store_connect` with `auth: integration`, `submit_to_testflight: true`
+  - Artifacts: `apps/nato_alphabet/build/ios/ipa/*.ipa`
+- [ ] AI commits and pushes updated `codemagic.yaml` to GitHub
+
+### Step 14.9 — Connect Apple Developer Account to Codemagic (USER does this)
+
+> This is the "integration" that the `auth: integration` line in codemagic.yaml refers to.
+
+- [ ] In Codemagic: **Teams → Integrations → Developer Portal**
+- [ ] Click **Connect Apple Developer Portal**
+- [ ] Enter the three API key values from Step 14.6:
+  - Key ID, Issuer ID, and upload the `.p8` file
+- [ ] Give the integration a name: `foreverfree_apple`
+- [ ] Click **Save**
+- [ ] Update `codemagic.yaml` if needed: the `integrations: app_store_connect:` field should match the name you chose (AI updates this if needed)
+
+### Step 14.10 — Prepare App Store Listing Text (AI does this)
+
+Apple's limits are different from Google Play — AI adapts existing copy:
+
+- [ ] AI prepares all text for App Store Connect:
+  - **Name**: `NATO Phonetic Alphabet Trainer` (30 chars)
+  - **Subtitle** (30 chars max): `Learn & quiz the NATO alphabet`
+  - **Description** (4,000 chars max): adapted from Play Store description
+  - **Keywords** (100 chars max): `nato,phonetic,alphabet,quiz,flashcard,military,aviation,communication,learn,free`
+  - **Support URL**: `https://coziahr.com/foreverfree`
+  - **Privacy Policy URL**: (existing URL from Phase 9)
+  - **What's New** (first release): `Initial release — free, offline, no ads.`
+- [ ] AI saves this to `docs/nato_alphabet/IOS-STORE-LISTING.md`
+
+### Step 14.11 — Complete App Store Connect Listing (USER does this)
+
+- [ ] In App Store Connect: navigate to your app → **App Store** tab
+- [ ] Paste Name, Subtitle, Description from `docs/nato_alphabet/IOS-STORE-LISTING.md`
+- [ ] Set **Category**: Education
+- [ ] Enter Keywords
+- [ ] Enter Support URL and Privacy Policy URL
+- [ ] Age Rating: click **Set Age Rating** → fill out questionnaire
+  - All violence/sexual/drug content: None/Rare
+  - Expected rating: **4+**
+- [ ] Privacy Nutrition Labels: **App Privacy → Get Started**
+  - Does your app collect data? → **No**
+  - Expected result: "No Data Collected" badge
+
+### Step 14.12 — iOS Screenshots (USER captures with iPad OR AI sets up EC2 Mac)
+
+Apple's required screenshot sizes:
+- **iPhone 6.9"** (1320×2868 px): Required — this is the only mandatory iPhone size
+- **iPad 13"** (2064×2752 px): Required IF the app declares iPad support
+
+**Option A (Recommended — easiest): Capture on your iPad after TestFlight build is ready**
+- [ ] Wait for Step 14.13 (first TestFlight build) before doing this step
+- [ ] Install the TestFlight build on your iPad
+- [ ] On iPad: press Power + Volume Up to screenshot (saves to Photos)
+- [ ] Take screenshots of: Reference screen, Letter Quiz, Letter Quiz revealed, Word Quiz, Word Quiz revealed, About page
+- [ ] Transfer to computer (AirDrop or USB) and upload to App Store Connect
+
+**Option B (AI does this via AWS EC2 Mac — takes ~2 hours, costs ~$20):**
+- [ ] USER allocates an EC2 Mac Dedicated Host (mac2.metal) in AWS Console
+  - Region: us-east-1 or us-west-2
+  - Note: 24-hour minimum billing applies the moment you allocate
+- [ ] USER launches macOS Sonoma or Sequoia instance on the host with a 200 GB EBS volume
+- [ ] USER creates a key pair and opens port 22 in the Security Group
+- [ ] AI SSHes in and installs: Flutter, Xcode Command Line Tools, CocoaPods
+- [ ] AI runs `xcrun simctl` to create an iPhone 6.9" and iPad 13" simulator
+- [ ] AI runs the app on simulator and captures screenshots via `xcrun simctl io booted screenshot`
+- [ ] AI downloads screenshots and saves to `docs/nato_alphabet/screenshots/`
+- [ ] USER releases the Dedicated Host (billing stops after the 24-hour minimum)
+
+### Step 14.13 — Trigger First iOS Build via Codemagic (AI does this)
+
+- [ ] AI commits a trigger commit (version bump or documentation update) and pushes to `main`
+- [ ] USER watches the `nato-alphabet-ios` workflow in the Codemagic dashboard
+- [ ] Verify each stage passes:
+  - Get dependencies ✅ → Analyze ✅ → Tests ✅ → Build IPA ✅ → Upload to TestFlight ✅
+- [ ] If build fails, AI diagnoses and fixes based on build log output
+- [ ] Once successful: the build appears in App Store Connect → TestFlight → iOS Builds
+
+### Step 14.14 — TestFlight Internal Testing (USER tests on iPad)
+
+> There is NO minimum beta testing period for iOS — unlike Android's 12-tester/14-day requirement.
+> Internal TestFlight testing is just for YOUR OWN confidence before submitting.
+
+- [ ] In App Store Connect: TestFlight → Internal Testing → add your Apple ID as tester
+- [ ] On your iPad: install the **TestFlight** app from the App Store (if not already installed)
+- [ ] Open TestFlight → find "NATO Phonetic Alphabet Trainer" → Install
+- [ ] Run the full test checklist:
+  - [ ] Reference screen: all 26 NATO entries show correctly
+  - [ ] Letter Quiz: all 26 letters cycle, Reveal and Next work, progress indicator updates
+  - [ ] Letter Quiz: "Done!" state appears, "Go Again" restarts cleanly
+  - [ ] Word Quiz: words show, Show Me reveals each letter, Next gives new word
+  - [ ] About page: opens, donation button works, back button returns
+  - [ ] Dark mode: switch iPad to dark mode, verify all screens look correct
+  - [ ] Airplane mode: enable airplane mode, confirm app still fully works
+  - [ ] Portrait and landscape: test both orientations (iPad supports both by default)
+  - [ ] No crashes, no freezes, no broken layouts
+
+### Step 14.15 — Upload Screenshots and Finalize Listing (USER does this)
+
+- [ ] Upload iPhone 6.9" screenshots to App Store Connect → App Store → iPhone 6.9" Display
+- [ ] Upload iPad 13" screenshots (from Option A or B in Step 14.12)
+- [ ] Review all listing text one more time for typos
+- [ ] Confirm Privacy Nutrition Labels are saved
+- [ ] Confirm Age Rating is 4+
+- [ ] Confirm Privacy Policy URL resolves to your actual policy
+
+### Step 14.16 — Submit for App Store Review (USER does this)
+
+- [ ] In App Store Connect: navigate to your app → **App Store** tab
+- [ ] Click **"+" next to iOS App** to add the version being released
+- [ ] Select the build uploaded by Codemagic in Step 14.13
+- [ ] Enter "What's New": `First release — free, offline, no ads ever.`
+- [ ] App Review Information:
+  - Sign-in required: **No**
+  - Notes to reviewer: `This app teaches the NATO phonetic alphabet through a reference card, letter quizzes, and word quizzes. No login, no network access required, no data collection.`
+  - Demo account: leave blank
+  - Contact info: your email and phone (Apple reviewer may contact you)
+- [ ] Version Release: select **Manually release this version** (so you control when it goes live)
+- [ ] Click **Submit for Review**
+- [ ] Apple review typically takes **24–72 hours** for new apps
+- [ ] You'll receive an email when approved, rejected, or if Apple has questions
+
+### Step 14.17 — Release and Verify (USER does this)
+
+- [ ] Once approved email arrives, go to App Store Connect
+- [ ] Click **Release This Version** (since we chose manual release)
+- [ ] Wait ~30 minutes for propagation to App Store CDN
+- [ ] Search "NATO Phonetic Alphabet Trainer" on the App Store from your iPad (not signed in as developer)
+- [ ] Install from the public listing and verify everything looks correct
+- [ ] Check the store page: icon, screenshots, description, rating all correct
 
 ### ✅ Phase 14 Success Condition
-App is live on the Apple App Store. Anyone with an iPhone or iPad can find and install
-"Forever Free: NATO Alphabet." Verified with a public install.
+"NATO Phonetic Alphabet Trainer" is live on the Apple App Store. Anyone with an iPhone
+or iPad can find and install it. Verified with a public install from the App Store listing
+(not TestFlight). Codemagic automatically pushes future updates to both Google Play and
+the App Store on every push to `main`.
+
+---
+
+### Optional: AWS EC2 Mac Instance Reference
+
+> Only needed if: you want to run Xcode interactively, debug a build issue the Codemagic
+> logs don't explain clearly, or capture iOS Simulator screenshots without a physical iPad.
+
+**Cost:** Minimum $15.60 per session (24h × $0.65/hr for mac2.metal). Billing starts when you allocate the Dedicated Host, not when the instance launches.
+
+**Steps to provision (USER does in AWS Console):**
+1. EC2 → Dedicated Hosts → Allocate Dedicated Host
+   - Instance family: `mac2` (Apple M1) or `mac2-m2` (Apple M2 — faster, costs more)
+   - Region/AZ: pick any
+2. EC2 → Launch Instance → choose macOS AMI (Sonoma or Sequoia)
+   - Host: select the Dedicated Host you just allocated
+   - Volume: **200 GB minimum** (Xcode needs ~50 GB alone)
+   - Key pair: create or use existing
+3. Security Group: open port 22 (SSH) from your IP
+4. Wait 10–15 minutes for the instance to become accessible
+5. SSH: `ssh -i your-key.pem ec2-user@<public-ip>`
+
+**What AI can do over SSH once connected:**
+- Install Flutter, Dart, CocoaPods
+- Run `flutter pub get`, `flutter analyze`, `flutter test`
+- Run `flutter build ipa` (command-line build, no GUI needed)
+- Run iOS Simulator headlessly: `xcrun simctl boot "iPhone 16 Pro"`
+- Capture simulator screenshots: `xcrun simctl io booted screenshot screenshot.png`
+- Run `xcodebuild archive` and `xcodebuild -exportArchive`
+
+**What AI CANNOT do over SSH:**
+- Interact with Xcode GUI (Accept license dialogs, visual debugging)
+- Respond to Keychain password prompts (GUI popups)
+- Use the iOS Simulator visually (headless only)
+
+**When done:** Terminate the instance AND release the Dedicated Host in AWS Console to stop billing.
 
 ---
 
@@ -523,7 +763,24 @@ Templates reflect everything learned from the first app.
 | Upload images to Ko-fi (profile photo, cover) | **User** ✅ done |
 | Deploy landing page to coziahr.com | **User** (requires domain/hosting access) |
 | Generate Ko-fi profile photo + cover image | **AI** (done — files in docs/nato_alphabet/kofi_assets/) |
-| Apple Developer account + signing | **User** (requires $99/year + Mac) |
+| Generate iOS platform files (`flutter create --platforms=ios`) | **AI** |
+| Configure iOS bundle ID (no underscores allowed) | **AI** |
+| Enable iOS icons in pubspec.yaml | **AI** |
+| Configure iOS Codemagic workflow (codemagic.yaml) | **AI** |
+| Prepare App Store listing text (IOS-STORE-LISTING.md) | **AI** |
+| SSH into EC2 Mac and run headless iOS builds/screenshots | **AI** (if EC2 Mac is provisioned) |
+| Apple Developer Program enrollment ($99/year) | **User** (identity + payment required) |
+| Create App ID in Apple Developer Portal | **User** (requires account) |
+| Create app record in App Store Connect | **User** (requires account) |
+| Generate App Store Connect API key (.p8 file) | **User** (one-time download — save immediately) |
+| Add iOS env vars to Codemagic (KEY_IDENTIFIER, ISSUER_ID, PRIVATE_KEY) | **User** (contains secrets) |
+| Connect Apple Developer account to Codemagic integration | **User** (requires account) |
+| Fill in App Store Connect listing, age rating, privacy labels | **User** (requires App Store Connect access) |
+| Capture screenshots from physical iPad (TestFlight build) | **User** (physical device) |
+| OR: provision AWS EC2 Mac for AI-driven screenshot capture | **User** (AWS account + $15.60+ minimum) |
+| Install TestFlight app, test on iPad | **User** (physical iPad) |
+| Submit for App Store review | **User** (requires App Store Connect access) |
+| Release approved build to App Store | **User** (manual release step) |
 
 ---
 
@@ -549,4 +806,4 @@ Templates reflect everything learned from the first app.
 ---
 
 *Last updated: 2026-04-04*
-*App version at time of writing: 1.0.0*
+*App version at time of writing: 1.1.1+3*

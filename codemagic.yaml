@@ -82,30 +82,71 @@ workflows:
         submit_as_draft: true
 
   # ============================
-  # NATO Alphabet - iOS (DEFERRED)
+  # NATO Alphabet - iOS
   # ============================
-  # Uncomment and configure when ready for iOS
-  #
-  # nato-alphabet-ios:
-  #   name: NATO Alphabet - iOS
-  #   max_build_duration: 30
-  #   instance_type: mac_mini_m2
-  #   environment:
-  #     flutter: stable
-  #     xcode: latest
-  #     cocoapods: default
-  #     groups:
-  #       - ios_credentials
-  #   scripts:
-  #     - name: Set up iOS signing
-  #       script: |
-  #         # iOS signing setup goes here
-  #     - name: Build iOS
-  #       script: |
-  #         cd apps/nato_alphabet
-  #         flutter build ipa --release
-  #   artifacts:
-  #     - apps/nato_alphabet/build/ios/ipa/*.ipa
-  #   publishing:
-  #     app_store_connect:
-  #       auth: integration
+  nato-alphabet-ios:
+    name: NATO Alphabet - iOS
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    integrations:
+      app_store_connect: foreverfree_apple   # Name of the integration in Codemagic UI (Step 14.9)
+
+    environment:
+      flutter: stable
+      xcode: latest    # Must be Xcode 16+ (Apple requirement as of April 2025)
+      cocoapods: default
+      groups:
+        - ios_credentials    # APP_STORE_CONNECT_KEY_IDENTIFIER, ISSUER_ID, PRIVATE_KEY
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.foreverfree.natoalphabet
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+
+    scripts:
+      - name: Get shared package dependencies
+        script: |
+          cd $CM_BUILD_DIR/packages/shared_app_core
+          flutter pub get
+
+      - name: Get app dependencies
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet
+          flutter pub get
+
+      - name: Install CocoaPods dependencies
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet/ios
+          pod install
+
+      - name: Analyze
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet
+          flutter analyze --no-fatal-infos
+
+      - name: Run unit and widget tests
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet
+          flutter test --coverage
+
+      - name: Build iOS IPA
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet
+          flutter build ipa --release \
+            --build-number=$PROJECT_BUILD_NUMBER \
+            --export-options-plist=/Users/builder/export_options.plist
+
+    artifacts:
+      - apps/nato_alphabet/build/ios/ipa/*.ipa
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        expire_build_submitted_for_review: true
