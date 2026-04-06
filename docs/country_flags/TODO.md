@@ -14,8 +14,8 @@
 
 ## Current Status
 
-- 🔄 **Phase 1 IN PROGRESS:** Requirements gathering — awaiting user description of app idea.
-- ⬜ Phase 2: Project setup
+- ✅ **Phase 1 COMPLETE:** Requirements approved by user.
+- 🔄 **Phase 2 IN PROGRESS:** Project setup
 - ⬜ Phase 3: Implementation
 - ⬜ Phase 4: Polish & testing
 - ⬜ Phase 5: User review

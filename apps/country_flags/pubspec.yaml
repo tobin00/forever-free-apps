@@ -13,6 +13,9 @@ dependencies:
   go_router: ^17.1.0
   shared_preferences: ^2.2.0
   url_launcher: ^6.2.0
+  # NOTE: Cannot add the pub.dev `country_flags` package here — it conflicts
+  # with this app's own package name (also `country_flags`). Flag rendering
+  # approach (emoji vs. a different SVG package) will be resolved in Phase 3.
   shared_app_core:
     path: ../../packages/shared_app_core
 
