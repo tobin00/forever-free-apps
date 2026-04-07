@@ -280,7 +280,16 @@ workflows:
             --create
           keychain initialize
           keychain add-certificates
-          xcode-project use-profiles
+          xcode-project use-profiles \
+            --project $CM_BUILD_DIR/apps/nato_alphabet/ios/Runner.xcodeproj
+
+      - name: Verify signing setup
+        script: |
+          echo "=== CODE SIGNING SETTINGS ==="
+          grep -A1 "CODE_SIGN\|DEVELOPMENT_TEAM\|PROVISIONING" \
+            $CM_BUILD_DIR/apps/nato_alphabet/ios/Runner.xcodeproj/project.pbxproj | head -40
+          echo "=== EXPORT OPTIONS PLIST ==="
+          cat /Users/builder/export_options.plist 2>/dev/null || echo "export_options.plist not found"
 
       - name: Build iOS IPA
         script: |
