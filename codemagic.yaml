@@ -277,8 +277,7 @@ workflows:
           app-store-connect fetch-signing-files \
             com.foreverfree.natoalphabet \
             --type IOS_APP_STORE \
-            --create \
-            --certificate-key "$CERTIFICATE_PRIVATE_KEY"
+            --create
           keychain initialize
           keychain add-certificates
           xcode-project use-profiles
