@@ -243,8 +243,9 @@ workflows:
       flutter: stable
       xcode: latest    # Must be Xcode 16+ (Apple requirement as of April 2025)
       cocoapods: default
-      # Signing is handled explicitly in scripts below using app-store-connect
-      # CLI with --create flag. This creates certs/profiles if none exist yet.
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.foreverfree.natoalphabet
 
     # NO triggering block — iOS builds are MANUAL ONLY until first build succeeds.
     # To run: Codemagic dashboard → nato-alphabet-ios → Start build.
