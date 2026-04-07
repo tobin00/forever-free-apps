@@ -274,11 +274,11 @@ workflows:
 
       - name: Set up iOS signing
         script: |
+          keychain initialize
           app-store-connect fetch-signing-files \
             com.foreverfree.natoalphabet \
             --type IOS_APP_STORE \
             --create
-          keychain initialize
           keychain add-certificates
           xcode-project use-profiles \
             --project $CM_BUILD_DIR/apps/nato_alphabet/ios/Runner.xcodeproj
