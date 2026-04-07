@@ -42,7 +42,7 @@ class AnswerCard extends StatelessWidget {
       AnswerCardStatus.selectedWrong =>
         isDark ? const Color(0xFF7F0000) : const Color(0xFFD32F2F),
       AnswerCardStatus.revealedCorrect =>
-        isDark ? const Color(0xFFBF360C) : const Color(0xFFF57C00),
+        isDark ? const Color(0xFF1B5E20) : const Color(0xFF388E3C),
     };
   }
 
