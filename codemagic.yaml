@@ -236,13 +236,12 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m2
 
-    integrations:
-      app_store_connect: foreverfree_apple   # Name of the integration in Codemagic UI (Step 14.9)
-
     environment:
       flutter: stable
-      xcode: latest    # Must be Xcode 16+ (Apple requirement as of April 2025)
+      xcode: latest
       cocoapods: default
+      groups:
+        - ios_credentials    # APP_STORE_CONNECT_KEY_IDENTIFIER, ISSUER_ID, PRIVATE_KEY
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.foreverfree.natoalphabet
@@ -298,6 +297,8 @@ workflows:
 
     publishing:
       app_store_connect:
-        auth: integration
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         expire_build_submitted_for_review: true
