@@ -242,9 +242,6 @@ workflows:
       cocoapods: default
       groups:
         - ios_credentials    # APP_STORE_CONNECT_KEY_IDENTIFIER, ISSUER_ID, PRIVATE_KEY
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.foreverfree.natoalphabet
 
     # NO triggering block — iOS builds are MANUAL ONLY until first build succeeds.
     # To run: Codemagic dashboard → nato-alphabet-ios → Start build.
