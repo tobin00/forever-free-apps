@@ -13,18 +13,46 @@ class TrickyFlagGroupsData {
   TrickyFlagGroupsData._();
 
   static const List<TrickyFlagGroup> all = [
-    // Group 1 — Green / Yellow / Red tricolors (Pan-African colors)
+    // Group 1 — Pan-African horizontal tricolors (green/yellow/red)
     TrickyFlagGroup(
       groupName: 'Green, Yellow & Red Tricolors',
       isoCodes: ['ET', 'GH', 'GN', 'CM'],
       // Ethiopia, Ghana, Guinea, Cameroon
     ),
 
-    // ── Add more groups below as they are identified ──────────────────────
-    // Example:
-    // TrickyFlagGroup(
-    //   groupName: 'Blue & White Horizontal Stripes',
-    //   isoCodes: ['GR', 'AR', 'HN', 'SV'],
-    // ),
+    // Group 2 — Nordic cross flags (cross on solid background)
+    TrickyFlagGroup(
+      groupName: 'Nordic Cross Flags',
+      isoCodes: ['DK', 'NO', 'IS', 'FI', 'SE'],
+      // Denmark, Norway, Iceland, Finland, Sweden
+    ),
+
+    // Group 3 — Arab tricolors (red / white / black horizontal)
+    TrickyFlagGroup(
+      groupName: 'Arab Tricolors (Red, White & Black)',
+      isoCodes: ['EG', 'SY', 'IQ', 'YE'],
+      // Egypt, Syria, Iraq, Yemen
+    ),
+
+    // Group 4 — Red & white bicolor flags
+    TrickyFlagGroup(
+      groupName: 'Red & White Bicolor Flags',
+      isoCodes: ['ID', 'MC', 'PL', 'SG'],
+      // Indonesia, Monaco, Poland, Singapore
+    ),
+
+    // Group 5 — Green / white / red-or-orange vertical tricolors
+    TrickyFlagGroup(
+      groupName: 'Green–White Vertical Tricolors',
+      isoCodes: ['IE', 'IT', 'CI', 'MX'],
+      // Ireland, Italy, Côte d'Ivoire, Mexico
+    ),
+
+    // Group 6 — Red / white / blue horizontal tricolors
+    TrickyFlagGroup(
+      groupName: 'Red, White & Blue Horizontal Tricolors',
+      isoCodes: ['NL', 'LU', 'RU', 'CZ'],
+      // Netherlands, Luxembourg, Russia, Czech Republic
+    ),
   ];
 }

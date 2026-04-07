@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class MistakesQuizScreen extends StatelessWidget {
+import '../models/mc_quiz_state.dart';
+import '../providers/multiple_choice_quiz_provider.dart';
+import '../widgets/mc_quiz_body.dart';
+
+class MistakesQuizScreen extends ConsumerWidget {
   const MistakesQuizScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // TODO(Phase 3): Implement mistakes quiz — same UI as Multiple Choice but
-    // question pool comes from the persisted mistakes list. Correct answers are
-    // removed from the list in real time.
-    return Scaffold(
-      appBar: AppBar(title: const Text('Mistakes Quiz')),
-      body: const Center(child: Text('Mistakes Quiz — coming in Phase 3')),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(mistakesQuizProvider);
+
+    ref.listen<MCQuizState>(mistakesQuizProvider, (_, next) {
+      if (next.isComplete) {
+        context.go('/quiz-results', extra: {
+          'right': next.rightCount,
+          'wrong': next.wrongCount,
+        });
+      }
+    });
+
+    if (state.isComplete) return const SizedBox.shrink();
+
+    return MCQuizBody(
+      state: state,
+      onAnswer: (iso) => ref.read(mistakesQuizProvider.notifier).answer(iso),
+      onNext: () => ref.read(mistakesQuizProvider.notifier).next(),
+      onQuit: () => context.go('/'),
     );
   }
 }

@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class MultipleChoiceQuizScreen extends StatelessWidget {
+import '../models/mc_quiz_state.dart';
+import '../providers/multiple_choice_quiz_provider.dart';
+import '../widgets/mc_quiz_body.dart';
+
+class MultipleChoiceQuizScreen extends ConsumerWidget {
   const MultipleChoiceQuizScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // TODO(Phase 3): Implement multiple choice quiz — random flag/name mode per question,
-    // 4 answer cards (light blue), progress bar, Right/Wrong counter, X quit button,
-    // green/red/amber card feedback, results screen on completion.
-    return Scaffold(
-      appBar: AppBar(title: const Text('Multiple Choice')),
-      body: const Center(child: Text('Multiple Choice Quiz — coming in Phase 3')),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(multipleChoiceQuizProvider);
+
+    ref.listen<MCQuizState>(multipleChoiceQuizProvider, (_, next) {
+      if (next.isComplete) {
+        context.go('/quiz-results', extra: {
+          'right': next.rightCount,
+          'wrong': next.wrongCount,
+        });
+      }
+    });
+
+    if (state.isComplete) return const SizedBox.shrink();
+
+    return MCQuizBody(
+      state: state,
+      onAnswer: (iso) =>
+          ref.read(multipleChoiceQuizProvider.notifier).answer(iso),
+      onNext: () => ref.read(multipleChoiceQuizProvider.notifier).next(),
+      onQuit: () => context.go('/'),
     );
   }
 }
