@@ -91,7 +91,10 @@ class CountryFlagsApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Forever Free: Flags of the World',
-      theme: AppTheme.light,
+      // TODO: pick a final background colour — using steel grey temporarily
+      theme: AppTheme.light.copyWith(
+        scaffoldBackgroundColor: const Color(0xFFB0BEC5),
+      ),
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
       routerConfig: _router,
