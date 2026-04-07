@@ -280,8 +280,7 @@ workflows:
             --create
           keychain initialize
           keychain add-certificates
-          xcode-project use-profiles \
-            --workspace $CM_BUILD_DIR/apps/nato_alphabet/ios/Runner.xcworkspace
+          xcode-project use-profiles
 
       - name: Build iOS IPA
         script: |
