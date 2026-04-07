@@ -243,14 +243,13 @@ workflows:
       flutter: stable
       xcode: latest    # Must be Xcode 16+ (Apple requirement as of April 2025)
       cocoapods: default
-      groups:
-        - ios_credentials    # APP_STORE_CONNECT_KEY_IDENTIFIER, ISSUER_ID, PRIVATE_KEY
+      # No ios_credentials env group needed — signing uses the Developer Portal
+      # integration (foreverfree_apple) connected in Codemagic Team Settings.
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.foreverfree.natoalphabet
 
-    # NO triggering block — iOS builds are MANUAL ONLY until Apple Developer
-    # account and Codemagic integration are fully configured.
+    # NO triggering block — iOS builds are MANUAL ONLY until first build succeeds.
     # To run: Codemagic dashboard → nato-alphabet-ios → Start build.
 
     scripts:
@@ -278,6 +277,10 @@ workflows:
         script: |
           cd $CM_BUILD_DIR/apps/nato_alphabet
           flutter test --coverage
+
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
 
       - name: Build iOS IPA
         script: |
