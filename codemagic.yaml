@@ -274,30 +274,104 @@ workflows:
 
       - name: Set up iOS signing
         script: |
+          # ── 0. ENV VAR AUDIT ──────────────────────────────────────────────
+          echo "=== ENV VAR AUDIT (names/lengths, no secret values) ==="
+          echo "APP_STORE_CONNECT_KEY_IDENTIFIER  : ${APP_STORE_CONNECT_KEY_IDENTIFIER:+(SET, value=${APP_STORE_CONNECT_KEY_IDENTIFIER})}"
+          echo "APP_STORE_CONNECT_ISSUER_ID       : ${APP_STORE_CONNECT_ISSUER_ID:+(SET, value=${APP_STORE_CONNECT_ISSUER_ID})}"
+          echo "APP_STORE_CONNECT_PRIVATE_KEY len  : ${#APP_STORE_CONNECT_PRIVATE_KEY} chars"
+          echo "CERTIFICATE_PRIVATE_KEY len        : ${#CERTIFICATE_PRIVATE_KEY} chars"
+          if [ ${#APP_STORE_CONNECT_PRIVATE_KEY} -lt 10 ]; then
+            echo "ERROR: APP_STORE_CONNECT_PRIVATE_KEY is empty or near-empty!"
+          fi
+          if [ ${#APP_STORE_CONNECT_ISSUER_ID} -lt 5 ]; then
+            echo "ERROR: APP_STORE_CONNECT_ISSUER_ID is empty — check variable name in ios_credentials group!"
+          fi
+          if [ ${#CERTIFICATE_PRIVATE_KEY} -lt 10 ]; then
+            echo "WARNING: CERTIFICATE_PRIVATE_KEY is empty — may cause certificate fetch failure!"
+          fi
+
+          # ── 1. KEYCHAIN INITIALIZE ────────────────────────────────────────
+          echo ""
+          echo "=== STEP 1: keychain initialize ==="
           keychain initialize
+          echo "keychain initialize exit code: $?"
+
+          # ── 2. FETCH SIGNING FILES ────────────────────────────────────────
+          echo ""
+          echo "=== STEP 2: app-store-connect fetch-signing-files ==="
           app-store-connect fetch-signing-files \
             com.foreverfree.natoalphabet \
             --type IOS_APP_STORE \
-            --create
+            --create \
+            --verbose || { echo "fetch-signing-files FAILED with exit code $?"; exit 1; }
+          echo "fetch-signing-files exit code: $?"
+
+          # ── 3. SHOW FILES CREATED BY FETCH ────────────────────────────────
+          echo ""
+          echo "=== FILES AFTER FETCH (checking ALL known locations) ==="
+          echo "-- ~/Library/Developer/Xcode/UserData/Certificates:"
+          ls -la "$HOME/Library/Developer/Xcode/UserData/Certificates/" 2>/dev/null \
+            || echo "  (directory not found)"
+          echo "-- ~/Library/MobileDevice/Certificates:"
+          ls -la "$HOME/Library/MobileDevice/Certificates/" 2>/dev/null \
+            || echo "  (directory not found)"
+          echo "-- ~/Library/Developer/Xcode/UserData/Provisioning Profiles:"
+          ls -la "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/" 2>/dev/null \
+            || echo "  (directory not found)"
+          echo "-- ~/Library/MobileDevice/Provisioning Profiles:"
+          ls -la "$HOME/Library/MobileDevice/Provisioning Profiles/" 2>/dev/null \
+            || echo "  (directory not found)"
+
+          # ── 4. ADD CERTIFICATES TO KEYCHAIN ───────────────────────────────
+          echo ""
+          echo "=== STEP 3: keychain add-certificates ==="
           keychain add-certificates
+          echo "keychain add-certificates exit code: $?"
+
+          # ── 5. SHOW CODE SIGNING IDENTITIES IN KEYCHAIN ───────────────────
+          echo ""
+          echo "=== IDENTITIES IN KEYCHAIN AFTER add-certificates ==="
+          security find-identity -v -p codesigning \
+            || echo "  security find-identity failed or found no identities"
+
+          # ── 6. USE PROFILES ────────────────────────────────────────────────
+          echo ""
+          echo "=== STEP 4: xcode-project use-profiles ==="
           xcode-project use-profiles \
-            --project $CM_BUILD_DIR/apps/nato_alphabet/ios/Runner.xcodeproj
+            --project $CM_BUILD_DIR/apps/nato_alphabet/ios/Runner.xcodeproj \
+            --verbose || { echo "use-profiles FAILED with exit code $?"; exit 1; }
+          echo "xcode-project use-profiles exit code: $?"
 
       - name: Verify signing setup
         script: |
-          echo "=== PROVISIONING PROFILES ON DISK ==="
-          ls ~/Library/MobileDevice/Provisioning\ Profiles/ 2>/dev/null \
-            && for f in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; do
+          echo "=== PROVISIONING PROFILES: Xcode/UserData path ==="
+          ls "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/" 2>/dev/null \
+            && for f in "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/"*.mobileprovision; do
                  echo "--- $f ---"
                  security cms -D -i "$f" 2>/dev/null \
                    | grep -E "<key>Name|<key>UUID|<key>application-identifier" -A1 \
                    | head -12
                done \
-            || echo "No provisioning profiles found on disk"
-          echo "=== CODE SIGNING SETTINGS IN PROJECT ==="
+            || echo "No profiles in Xcode/UserData path"
+
+          echo ""
+          echo "=== PROVISIONING PROFILES: MobileDevice path ==="
+          ls "$HOME/Library/MobileDevice/Provisioning Profiles/" 2>/dev/null \
+            && for f in "$HOME/Library/MobileDevice/Provisioning Profiles/"*.mobileprovision; do
+                 echo "--- $f ---"
+                 security cms -D -i "$f" 2>/dev/null \
+                   | grep -E "<key>Name|<key>UUID|<key>application-identifier" -A1 \
+                   | head -12
+               done \
+            || echo "No profiles in MobileDevice path"
+
+          echo ""
+          echo "=== CODE SIGNING SETTINGS IN project.pbxproj ==="
           grep -E "CODE_SIGN|DEVELOPMENT_TEAM|PROVISIONING_PROFILE" \
             $CM_BUILD_DIR/apps/nato_alphabet/ios/Runner.xcodeproj/project.pbxproj \
             | grep -v "^//"
+
+          echo ""
           echo "=== EXPORT OPTIONS PLIST ==="
           cat /Users/builder/export_options.plist 2>/dev/null || echo "export_options.plist not found"
 
