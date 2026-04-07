@@ -1,4 +1,4 @@
-name: country_flags
+name: ff_country_flags
 description: Forever Free Country Flags — learn the flags of every country, free and offline.
 publish_to: 'none'
 version: 1.0.0+1
@@ -13,9 +13,7 @@ dependencies:
   go_router: ^17.1.0
   shared_preferences: ^2.2.0
   url_launcher: ^6.2.0
-  # NOTE: Cannot add the pub.dev `country_flags` package here — it conflicts
-  # with this app's own package name (also `country_flags`). Flag rendering
-  # approach (emoji vs. a different SVG package) will be resolved in Phase 3.
+  country_flags: ^4.1.2
   shared_app_core:
     path: ../../packages/shared_app_core
 
