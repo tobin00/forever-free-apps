@@ -20,7 +20,7 @@ class Brand {
   // Contact paragraph — split so the email address can be rendered as a link.
   static const String contactPrefix =
       'If you find any bugs, or have ideas for an app I should make, send them to ';
-  static const String contactEmail = 'foreverfree@coziahr.com';
+  static const String contactEmail = 'makeitforeverfree@gmail.com';
 
   static const String donationParagraph =
       'All my apps are free, forever. If you want to help support the cause '
