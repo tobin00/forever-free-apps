@@ -232,8 +232,8 @@ workflows:
   # NATO Alphabet - iOS Screenshots
   # ============================
   # Manual only — run this workflow when you need fresh App Store screenshots.
-  # Downloads 6 PNG files (1320×2868 px, iPhone 16 Pro Max resolution) as
-  # build artifacts. Takes ~20 minutes and uses no App Store credentials.
+  # Downloads 6 PNG files as build artifacts. Takes ~20 min, no App Store creds.
+  # Target device: iPhone Air (6.7", expected 1284×2778 — accepted for 6.5" slot).
   nato-alphabet-screenshots:
     name: NATO Alphabet - iOS Screenshots
     max_build_duration: 30
@@ -260,24 +260,49 @@ workflows:
           cd $CM_BUILD_DIR/apps/nato_alphabet/ios
           pod install
 
-      - name: Show available iPhone simulators
+      - name: Verify simulator resolution before full run
         script: |
-          echo "=== Available iPhone simulators ==="
-          xcrun simctl list devices available | grep -i "iphone"
+          echo "=== Booting iPhone Air simulator for resolution check ==="
+          UDID=$(xcrun simctl list devices available | grep "iPhone Air" | head -1 \
+                 | grep -E -o '[A-F0-9-]{36}')
+          echo "UDID: $UDID"
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          sleep 8
+          xcrun simctl io "$UDID" screenshot /tmp/resolution_check.png
+          echo "=== Screenshot dimensions ==="
+          sips -g pixelWidth -g pixelHeight /tmp/resolution_check.png
+          echo ""
+          echo "Accepted sizes for App Store 6.5\" slot:"
+          echo "  1242 x 2688  (iPhone XS Max / 11 Pro Max)"
+          echo "  1284 x 2778  (iPhone 12–14 Pro Max)"
+          echo ""
+          WIDTH=$(sips -g pixelWidth /tmp/resolution_check.png | awk '/pixelWidth/{print $2}')
+          HEIGHT=$(sips -g pixelHeight /tmp/resolution_check.png | awk '/pixelHeight/{print $2}')
+          if [[ ("$WIDTH" == "1242" && "$HEIGHT" == "2688") || \
+                ("$WIDTH" == "1284" && "$HEIGHT" == "2778") ]]; then
+            echo "✓ Resolution $WIDTH x $HEIGHT matches App Store requirement — proceeding."
+          else
+            echo "✗ Resolution $WIDTH x $HEIGHT does NOT match any accepted size."
+            echo "  Update the device name in this workflow and re-run."
+            exit 1
+          fi
 
-      - name: Capture screenshots on iPhone 16 Pro Max simulator
+      - name: Capture screenshots on iPhone Air simulator
         script: |
           cd $CM_BUILD_DIR/apps/nato_alphabet
           mkdir -p screenshots
           flutter drive \
             --driver  integration_test/test_driver/screenshots_driver.dart \
             --target  integration_test/screenshots_test.dart \
-            --device-id "iPhone 16 Pro Max"
+            --device-id "iPhone Air"
 
-      - name: List saved screenshots
+      - name: Verify saved screenshots and their dimensions
         script: |
           echo "=== Saved screenshots ==="
-          ls -lh $CM_BUILD_DIR/apps/nato_alphabet/screenshots/
+          for f in $CM_BUILD_DIR/apps/nato_alphabet/screenshots/*.png; do
+            dims=$(sips -g pixelWidth -g pixelHeight "$f" | awk '/pixel/{printf $2" "}')
+            echo "  $(basename $f)  —  $dims"
+          done
 
     artifacts:
       - apps/nato_alphabet/screenshots/*.png
