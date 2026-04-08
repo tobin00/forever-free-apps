@@ -303,6 +303,33 @@ workflows:
             --target  integration_test/screenshots_test.dart \
             --device-id "$SCREENSHOT_UDID"
 
+      - name: Strip alpha channels (App Store rejects RGBA PNGs)
+        script: |
+          # flutter takeScreenshot() produces RGBA PNGs even when fully opaque.
+          # App Store Connect rejects any PNG with an alpha channel.
+          # Convert each screenshot from RGBA to RGB in-place using Python + Pillow.
+          pip3 install Pillow --quiet
+          cd $CM_BUILD_DIR/apps/nato_alphabet
+          python3 -c "
+from PIL import Image
+import glob
+
+paths = sorted(glob.glob('screenshots/*.png'))
+if not paths:
+    print('ERROR: No screenshots found in screenshots/')
+    exit(1)
+for path in paths:
+    img = Image.open(path)
+    print(f'  {path}: mode={img.mode}, size={img.size}')
+    if img.mode in ('RGBA', 'LA', 'P'):
+        img = img.convert('RGB')
+        img.save(path, 'PNG')
+        print(f'    -> converted to RGB, alpha stripped')
+    else:
+        print(f'    -> already RGB, no change needed')
+print(f'Done. Processed {len(paths)} screenshots.')
+"
+
       - name: Verify saved screenshots and their dimensions
         script: |
           echo "=== Saved screenshots ==="
