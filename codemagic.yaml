@@ -233,7 +233,7 @@ workflows:
   # ============================
   # Manual only — run this workflow when you need fresh App Store screenshots.
   # Downloads 6 PNG files as build artifacts. Takes ~20 min, no App Store creds.
-  # Target device: iPhone Air (6.7", expected 1284×2778 — accepted for 6.5" slot).
+  # Target device: iPhone 17 Pro Max (6.9" Display slot in App Store Connect).
   nato-alphabet-screenshots:
     name: NATO Alphabet - iOS Screenshots
     max_build_duration: 30
@@ -260,41 +260,14 @@ workflows:
           cd $CM_BUILD_DIR/apps/nato_alphabet/ios
           pod install
 
-      - name: Verify simulator resolution before full run
-        script: |
-          echo "=== Booting iPhone Air simulator for resolution check ==="
-          UDID=$(xcrun simctl list devices available | grep "iPhone Air" | head -1 \
-                 | grep -E -o '[A-F0-9-]{36}')
-          echo "UDID: $UDID"
-          xcrun simctl boot "$UDID" 2>/dev/null || true
-          sleep 8
-          xcrun simctl io "$UDID" screenshot /tmp/resolution_check.png
-          echo "=== Screenshot dimensions ==="
-          sips -g pixelWidth -g pixelHeight /tmp/resolution_check.png
-          echo ""
-          echo "Accepted sizes for App Store 6.5\" slot:"
-          echo "  1242 x 2688  (iPhone XS Max / 11 Pro Max)"
-          echo "  1284 x 2778  (iPhone 12–14 Pro Max)"
-          echo ""
-          WIDTH=$(sips -g pixelWidth /tmp/resolution_check.png | awk '/pixelWidth/{print $2}')
-          HEIGHT=$(sips -g pixelHeight /tmp/resolution_check.png | awk '/pixelHeight/{print $2}')
-          if [[ ("$WIDTH" == "1242" && "$HEIGHT" == "2688") || \
-                ("$WIDTH" == "1284" && "$HEIGHT" == "2778") ]]; then
-            echo "✓ Resolution $WIDTH x $HEIGHT matches App Store requirement — proceeding."
-          else
-            echo "✗ Resolution $WIDTH x $HEIGHT does NOT match any accepted size."
-            echo "  Update the device name in this workflow and re-run."
-            exit 1
-          fi
-
-      - name: Capture screenshots on iPhone Air simulator
+      - name: Capture screenshots on iPhone 17 Pro Max simulator
         script: |
           cd $CM_BUILD_DIR/apps/nato_alphabet
           mkdir -p screenshots
           flutter drive \
             --driver  integration_test/test_driver/screenshots_driver.dart \
             --target  integration_test/screenshots_test.dart \
-            --device-id "iPhone Air"
+            --device-id "iPhone 17 Pro Max"
 
       - name: Verify saved screenshots and their dimensions
         script: |
