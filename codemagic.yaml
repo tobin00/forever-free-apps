@@ -260,6 +260,40 @@ workflows:
           cd $CM_BUILD_DIR/apps/nato_alphabet/ios
           pod install
 
+      - name: Boot iPhone 17 Pro Max simulator
+        script: |
+          set -euo pipefail
+
+          # Shut down any leftover simulators from previous steps
+          xcrun simctl shutdown all || true
+
+          # Extract the UDID of the first available iPhone 17 Pro Max
+          UDID=$(xcrun simctl list devices available \
+            | grep 'iPhone 17 Pro Max' \
+            | head -1 \
+            | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+
+          if [ -z "$UDID" ]; then
+            echo "ERROR: No 'iPhone 17 Pro Max' simulator found. Available devices:"
+            xcrun simctl list devices available | grep -i iphone
+            exit 1
+          fi
+
+          echo "Booting simulator UDID: $UDID"
+
+          # Boot AND block until fully ready (single atomic command)
+          xcrun simctl bootstatus "$UDID" -b
+
+          # Open Simulator.app so Flutter's device discovery sees the booted device
+          open -a Simulator
+          sleep 3
+
+          # Confirm Flutter can see it
+          flutter devices
+
+          # Persist UDID for the next step
+          echo "SCREENSHOT_UDID=$UDID" >> $CM_ENV
+
       - name: Capture screenshots on iPhone 17 Pro Max simulator
         script: |
           cd $CM_BUILD_DIR/apps/nato_alphabet
@@ -267,7 +301,7 @@ workflows:
           flutter drive \
             --driver  integration_test/test_driver/screenshots_driver.dart \
             --target  integration_test/screenshots_test.dart \
-            --device-id "iPhone 17 Pro Max"
+            --device-id "$SCREENSHOT_UDID"
 
       - name: Verify saved screenshots and their dimensions
         script: |
