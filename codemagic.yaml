@@ -229,6 +229,60 @@ workflows:
   #       expire_build_submitted_for_review: true
 
   # ============================
+  # NATO Alphabet - iOS Screenshots
+  # ============================
+  # Manual only — run this workflow when you need fresh App Store screenshots.
+  # Downloads 6 PNG files (1320×2868 px, iPhone 16 Pro Max resolution) as
+  # build artifacts. Takes ~20 minutes and uses no App Store credentials.
+  nato-alphabet-screenshots:
+    name: NATO Alphabet - iOS Screenshots
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Get shared package dependencies
+        script: |
+          cd $CM_BUILD_DIR/packages/shared_app_core
+          flutter pub get
+
+      - name: Get app dependencies
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet
+          flutter pub get
+
+      - name: Install CocoaPods dependencies
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet/ios
+          pod install
+
+      - name: Show available iPhone simulators
+        script: |
+          echo "=== Available iPhone simulators ==="
+          xcrun simctl list devices available | grep -i "iphone"
+
+      - name: Capture screenshots on iPhone 16 Pro Max simulator
+        script: |
+          cd $CM_BUILD_DIR/apps/nato_alphabet
+          mkdir -p screenshots
+          flutter drive \
+            --driver  integration_test/test_driver/screenshots_driver.dart \
+            --target  integration_test/screenshots_test.dart \
+            --device-id "iPhone 16 Pro Max"
+
+      - name: List saved screenshots
+        script: |
+          echo "=== Saved screenshots ==="
+          ls -lh $CM_BUILD_DIR/apps/nato_alphabet/screenshots/
+
+    artifacts:
+      - apps/nato_alphabet/screenshots/*.png
+
+  # ============================
   # NATO Alphabet - iOS
   # ============================
   nato-alphabet-ios:
