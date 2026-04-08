@@ -9,13 +9,11 @@
 //     --target  integration_test/screenshots_test.dart \
 //     -d "iPhone 16 Pro Max"
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:nato_alphabet/app.dart';
 import 'package:nato_alphabet/providers/theme_mode_provider.dart';
-import 'package:shared_app_core/shared_app_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
