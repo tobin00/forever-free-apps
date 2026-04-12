@@ -14,6 +14,7 @@ dependencies:
   audioplayers: ^6.0.0
   shared_preferences: ^2.2.0
   url_launcher: ^6.2.0
+  speech_to_text: ^7.0.0
   shared_app_core:
     path: ../../packages/shared_app_core
 

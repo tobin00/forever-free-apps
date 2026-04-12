@@ -8,6 +8,7 @@ import 'screens/about_screen.dart';
 import 'screens/letter_quiz_screen.dart';
 import 'screens/reference_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/voice_quiz_screen.dart';
 import 'screens/word_quiz_screen.dart';
 
 class NatoAlphabetApp extends ConsumerWidget {
@@ -36,6 +37,7 @@ final _router = GoRouter(
         int selectedIndex = 0;
         if (location.startsWith('/letter-quiz')) selectedIndex = 1;
         if (location.startsWith('/word-quiz')) selectedIndex = 2;
+        if (location.startsWith('/voice-quiz')) selectedIndex = 3;
 
         return AppShell(
           title: 'Forever Free: NATO Alphabet',
@@ -56,6 +58,11 @@ final _router = GoRouter(
               selectedIcon: Icon(Icons.spellcheck),
               label: 'Word Quiz',
             ),
+            AppShellDestination(
+              icon: Icon(Icons.mic_outlined),
+              selectedIcon: Icon(Icons.mic),
+              label: 'Voice Quiz',
+            ),
           ],
           extraActions: [
             IconButton(
@@ -65,7 +72,7 @@ final _router = GoRouter(
             ),
           ],
           onDestinationSelected: (index) {
-            const routes = ['/reference', '/letter-quiz', '/word-quiz'];
+            const routes = ['/reference', '/letter-quiz', '/word-quiz', '/voice-quiz'];
             context.go(routes[index]);
           },
           onAboutTap: () => context.push('/about'),
@@ -84,6 +91,10 @@ final _router = GoRouter(
         GoRoute(
           path: '/word-quiz',
           builder: (_, __) => const WordQuizScreen(),
+        ),
+        GoRoute(
+          path: '/voice-quiz',
+          builder: (_, __) => const VoiceQuizScreen(),
         ),
       ],
     ),

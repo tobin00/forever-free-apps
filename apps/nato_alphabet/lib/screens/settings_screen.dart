@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/theme_mode_provider.dart';
+import '../providers/voice_quiz_settings_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -9,6 +10,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
+    final voiceQuizEnabled = ref.watch(voiceQuizEnabledProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -48,6 +50,22 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
+            child: Text(
+              'Voice Quiz',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ),
+          SwitchListTile(
+            title: const Text('Enable Voice Quiz'),
+            subtitle: const Text('Uses your microphone to check spoken answers'),
+            value: voiceQuizEnabled,
+            onChanged: (v) =>
+                ref.read(voiceQuizEnabledProvider.notifier).setEnabled(v),
           ),
         ],
       ),

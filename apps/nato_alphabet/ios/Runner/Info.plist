@@ -26,6 +26,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Used to check your NATO word pronunciation in the Voice Quiz.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to listen for your spoken NATO word answer in the Voice Quiz.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
