@@ -5,6 +5,15 @@ on:
     branches: [main]
     paths:
       - 'website/**'
+      - '.github/workflows/deploy-website.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-website-deploy
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -13,32 +22,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check secrets are configured
-        id: check
-        run: |
-          if [ -z "${{ secrets.DEPLOY_SSH_HOST }}" ]; then
-            echo "DEPLOY_SSH_HOST secret is not set — skipping deploy."
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Deploy via rsync over SSH
-        if: steps.check.outputs.skip == 'false'
+      - name: Configure restricted SSH deployment
         env:
-          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
-          SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          SSH_KEY: ${{ secrets.ROOT_DEPLOY_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.ROOT_DEPLOY_KNOWN_HOSTS }}
         run: |
-          echo "$SSH_KEY" > /tmp/deploy_key
-          chmod 600 /tmp/deploy_key
+          test -n "$SSH_KEY"
+          test -n "$SSH_KNOWN_HOSTS"
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
 
-          # Sync website/ → coziahr.com/foreverfree/ on the server.
-          # The deploy key uses rrsync to jail access to that directory,
-          # so no remote path is specified — rrsync enforces it server-side.
-          rsync -avz --delete \
-            -e "ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no" \
-            website/ \
-            ${SSH_USER}@${SSH_HOST}:
+      - name: Publish landing page without touching project directories
+        run: |
+          # The key is jailed to coziahr.com's document root. Deliberately do
+          # not use --delete: /projects and any other independently deployed
+          # applications share the same document root and must be preserved.
+          timeout 60s rsync --recursive --verbose --times --compress --timeout=30 \
+            -e 'ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15' \
+            website/ tobin@coziahr.com:.
 
-          rm /tmp/deploy_key
+      - name: Remove the retired Forever Free subdirectory
+        run: |
+          # Scope deletion to the former site directory only. The empty source
+          # removes its contents without exposing any sibling directory to
+          # rsync's --delete behavior.
+          mkdir legacy-empty
+          timeout 60s rsync --recursive --delete --timeout=30 \
+            -e 'ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15' \
+            legacy-empty/ tobin@coziahr.com:foreverfree/
+
+      - name: Verify landing page and existing projects
+        run: |
+          curl --fail --silent --show-error --retry 3 https://coziahr.com/ >/dev/null
+          curl --fail --silent --show-error --retry 3 https://coziahr.com/projects/tikitorch/ >/dev/null
+          curl --fail --silent --show-error --retry 3 https://coziahr.com/projects/intervaltimer/ >/dev/null
+          curl --fail --silent --show-error --retry 3 https://tikipassport.coziahr.com/ >/dev/null
