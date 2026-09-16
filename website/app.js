@@ -36,4 +36,16 @@ function projectCard(project) {
 }
 
 const grid = document.querySelector("#project-grid");
-if (grid) PROJECTS.filter((project) => project.published).forEach((project) => grid.appendChild(projectCard(project)));
+
+function renderProjects(projects) {
+  if (!grid) return;
+  grid.replaceChildren();
+  projects.filter((project) => project.published).forEach((project) => grid.appendChild(projectCard(project)));
+}
+
+renderProjects(PROJECTS);
+
+fetch("api/projects.php", { headers: { Accept: "application/json" } })
+  .then((response) => response.ok ? response.json() : Promise.reject(new Error("catalog unavailable")))
+  .then((data) => { if (Array.isArray(data.projects)) renderProjects(data.projects); })
+  .catch(() => { /* The bundled catalog remains visible if the API is unavailable. */ });

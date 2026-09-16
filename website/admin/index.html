@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Admin — Forever Free</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#073c47">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="admin-header">
+    <a class="wordmark" href="/"><span aria-hidden="true">∞</span> Forever Free</a>
+    <div class="account-actions"><span id="account-name"></span><button class="quiet-button" id="sign-out" type="button" hidden>Sign out</button></div>
+  </header>
+
+  <main>
+    <section class="auth-panel" id="auth-panel">
+      <p class="eyebrow">Private workspace</p>
+      <h1>Project admin</h1>
+      <p>Sign in with your authorized Forever Free account to edit the public project catalog.</p>
+      <button class="primary-button" id="google-sign-in" type="button">Continue with Google</button>
+      <div class="divider"><span>or</span></div>
+      <form id="email-form">
+        <label for="email">Email address</label>
+        <div class="email-row"><input id="email" name="email" type="email" autocomplete="email" required><button class="secondary-button" type="submit">Email me a sign-in link</button></div>
+      </form>
+      <p class="status" id="auth-status" role="status"></p>
+    </section>
+
+    <section class="editor" id="editor" hidden>
+      <div class="editor-heading">
+        <div><p class="eyebrow">Catalog editor</p><h1>Your projects</h1><p>Drag with the arrow buttons to set the public order. Unpublished projects stay saved but disappear from the landing page.</p></div>
+        <div class="editor-actions"><a class="quiet-button link-button" href="/" target="_blank" rel="noopener">View site ↗</a><button class="primary-button" id="save" type="button">Save changes</button></div>
+      </div>
+      <div class="notice" id="editor-status" role="status"></div>
+      <div class="project-editor-list" id="project-list"></div>
+      <button class="add-button" id="add-project" type="button">+ Add project</button>
+    </section>
+  </main>
+
+  <template id="project-template">
+    <article class="project-editor-card">
+      <div class="card-toolbar">
+        <strong class="card-number"></strong>
+        <div><button class="icon-button move-up" type="button" aria-label="Move project up">↑</button><button class="icon-button move-down" type="button" aria-label="Move project down">↓</button><button class="remove-button" type="button">Remove</button></div>
+      </div>
+      <div class="form-grid">
+        <label>Project name<input name="name" required></label>
+        <label>Type<input name="type" required placeholder="Game, utility, travel companion…"></label>
+        <label class="wide">Description<textarea name="description" rows="4" required></textarea></label>
+        <label class="wide">Project URL<input name="url" type="url" required></label>
+        <label>Project ID<input name="id" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required></label>
+        <label>Accent<select name="accent"><option value="coral">Coral</option><option value="gold">Gold</option><option value="blue">Blue</option></select></label>
+        <label class="wide">Image path<input name="image" required placeholder="projects/example/cover.webp"></label>
+        <label class="wide">Image description<input name="imageAlt" required></label>
+      </div>
+      <div class="toggles">
+        <label><input name="published" type="checkbox"> Published</label>
+        <label><input name="featured" type="radio"> Featured project</label>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

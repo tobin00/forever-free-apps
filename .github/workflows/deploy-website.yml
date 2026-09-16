@@ -59,6 +59,8 @@ jobs:
       - name: Verify landing page and existing projects
         run: |
           curl --fail --silent --show-error --retry 3 https://coziahr.com/ >/dev/null
+          curl --fail --silent --show-error --retry 3 https://coziahr.com/admin/ >/dev/null
+          curl --fail --silent --show-error --retry 3 https://coziahr.com/api/projects.php >/dev/null
           curl --fail --silent --show-error --retry 3 https://coziahr.com/projects/tikitorch/ >/dev/null
           curl --fail --silent --show-error --retry 3 https://coziahr.com/projects/intervaltimer/ >/dev/null
           curl --fail --silent --show-error --retry 3 https://tikipassport.coziahr.com/ >/dev/null
