@@ -1,60 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ForeverFree Apps — Free, Ad-Free Mobile Apps</title>
-  <meta name="description" content="Free, ad-free, tracking-free mobile apps. Built with care in the spirit of early internet shareware.">
-
-  <!-- Fonts -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forever Free — Useful things, made freely</title>
+  <meta name="description" content="Games, tools, and useful websites made by Tobin Coziahr. No ads, no subscriptions, and no cost.">
+  <meta name="theme-color" content="#073c47">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Sora:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- ── HERO ─────────────────────────────────────────── -->
-  <header class="hero">
-    <img src="assets/banner.jpg" alt="ForeverFree — Free apps, no ads, no tracking. Just useful tools made with care." class="hero-banner">
+  <a class="skip-link" href="#projects">Skip to projects</a>
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Forever Free home"><span class="wordmark-mark" aria-hidden="true">∞</span><span>Forever Free</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#projects">Projects</a>
+      <a href="#philosophy">Philosophy</a>
+      <a class="nav-contact" href="#contact">Say hello</a>
+    </nav>
   </header>
 
-  <!-- ── PHILOSOPHY ────────────────────────────────────── -->
-  <section class="philosophy">
-    <div class="container">
-      <h2>Our Philosophy</h2>
-      <p>In the early days of the internet, people made software because they wanted to help others. No subscription traps, no ad-surveillance, no dark patterns — just useful tools shared freely.</p>
-      <p>We're bringing that spirit back. Every app in this collection is completely free, contains no ads, collects no data, and requires no internet connection to use. They exist to be genuinely useful, nothing more.</p>
-      <p>These apps will always be free. If you find them useful and want to help cover the cost of keeping them available, donations are welcome but never expected.</p>
-      <a href="https://ko-fi.com/foreverfreeapps" class="donate-link" target="_blank" rel="noopener">Support on Ko-fi ☕</a>
-    </div>
-  </section>
-
-  <!-- ── APP CATALOG ───────────────────────────────────── -->
-  <section class="catalog">
-    <div class="container">
-      <h2>Our Apps</h2>
-      <div class="app-list" id="app-list">
-        <!-- Rendered by app.js -->
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Made by Tobin Coziahr</p>
+        <h1 id="hero-title">Great stuff.<br><em>Forever free.</em></h1>
+        <p class="hero-intro">Games, tools, and useful websites made with care—without ads, subscriptions, tracking, or a catch.</p>
+        <a class="button button-primary" href="#projects">Explore my projects <span aria-hidden="true">↓</span></a>
       </div>
-    </div>
-  </section>
+      <div class="hero-art" role="img" aria-label="Tobin relaxing by a tropical beach while holding a phone"></div>
+      <p class="hero-note" aria-hidden="true">No ads · No tracking · No joke</p>
+    </section>
 
-  <!-- ── FOOTER ─────────────────────────────────────────── -->
+    <section class="projects-section" id="projects" aria-labelledby="projects-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">Things I’ve made</p><h2 id="projects-title">Pick something and jump in.</h2></div>
+        <p>Every project is ready to use in your browser. No payment, no trial period, and no nonsense.</p>
+      </div>
+      <div class="project-grid" id="project-grid"></div>
+    </section>
+
+    <section class="philosophy" id="philosophy" aria-labelledby="philosophy-title">
+      <div class="philosophy-heading"><p class="eyebrow">Why Forever Free?</p><h2 id="philosophy-title">The early internet had a generous streak.</h2></div>
+      <div class="philosophy-copy">
+        <p>People made software because they had an idea, solved a problem, or simply wanted to share something useful. It didn’t need an account, harvest your data, or interrupt you with an ad every thirty seconds.</p>
+        <p>I want to keep some of that spirit alive. Everything here is free to use, free of ads, and built to respect your time and privacy. If a project can work without collecting your data, it will.</p>
+        <p>These projects are personal, sometimes a little unusual, and always made with care. I hope one of them makes your day easier—or at least more fun.</p>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div>
+        <p class="eyebrow">Ideas, bugs, and hellos</p>
+        <h2 id="contact-title">Found something I should know about?</h2>
+        <p>If you spot a bug, have an idea for an improvement, or just want to tell me you enjoyed a project, I’d genuinely like to hear from you.</p>
+      </div>
+      <a class="button button-light" href="mailto:makeitforeverfree@gmail.com">Email me <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
   <footer class="site-footer">
-    <div class="container">
-      <p>No ads, no tracking, no data collection.</p>
-      <p class="footer-secondary">
-        <a href="https://ko-fi.com/foreverfreeapps" target="_blank" rel="noopener">Ko-fi</a>
-        &nbsp;&middot;&nbsp;
-        <a href="mailto:makeitforeverfree@gmail.com">Contact</a>
-      </p>
-    </div>
+    <a class="wordmark footer-wordmark" href="#top"><span class="wordmark-mark" aria-hidden="true">∞</span><span>Forever Free</span></a>
+    <p>Useful things, made freely.</p>
+    <div class="footer-links"><a href="mailto:makeitforeverfree@gmail.com">Contact</a><a href="https://ko-fi.com/foreverfreeapps" target="_blank" rel="noopener">Ko-fi <span class="sr-only">(opens in a new tab)</span></a></div>
   </footer>
 
-  <script src="apps-data.js"></script>
+  <script src="projects-data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
