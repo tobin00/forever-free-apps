@@ -38,6 +38,21 @@
         <div class="editor-actions"><a class="quiet-button link-button" href="/" target="_blank" rel="noopener">View site ↗</a><button class="primary-button" id="save" type="button">Save changes</button></div>
       </div>
       <div class="notice" id="editor-status" role="status"></div>
+      <section class="upload-panel" aria-labelledby="upload-title">
+        <div>
+          <p class="eyebrow">Project images</p>
+          <h2 id="upload-title">Upload an image</h2>
+          <p>Choose an image and give it a path inside a project folder. You can paste the saved path into any image field below.</p>
+        </div>
+        <form id="upload-form">
+          <label>Image file<input id="upload-file" name="file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required></label>
+          <label>Save as<input id="upload-path" name="path" required pattern="projects/[a-z0-9][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._-]*\.(jpg|jpeg|png|webp|gif)" placeholder="projects/tiki-passport/foobar.jpg"></label>
+          <label class="overwrite-option"><input id="upload-overwrite" name="overwrite" type="checkbox"> Replace the file if this path already exists</label>
+          <button class="secondary-button" id="upload-button" type="submit">Upload image</button>
+        </form>
+        <p class="status" id="upload-status" role="status"></p>
+        <div class="upload-result" id="upload-result" hidden><input id="uploaded-path" readonly aria-label="Uploaded image path"><button class="quiet-button" id="copy-upload-path" type="button">Copy path</button></div>
+      </section>
       <div class="project-editor-list" id="project-list"></div>
       <button class="add-button" id="add-project" type="button">+ Add project</button>
     </section>

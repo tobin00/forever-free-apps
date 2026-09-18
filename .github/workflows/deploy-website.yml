@@ -61,6 +61,7 @@ jobs:
           curl --fail --silent --show-error --retry 3 https://coziahr.com/ >/dev/null
           curl --fail --silent --show-error --retry 3 https://coziahr.com/admin/ >/dev/null
           curl --fail --silent --show-error --retry 3 https://coziahr.com/api/projects.php >/dev/null
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' --request POST https://coziahr.com/api/upload.php)" = "401"
           curl --fail --silent --show-error --retry 3 https://coziahr.com/projects/tikitorch/ >/dev/null
           curl --fail --silent --show-error --retry 3 https://coziahr.com/projects/intervaltimer/ >/dev/null
           curl --fail --silent --show-error --retry 3 https://tikipassport.coziahr.com/ >/dev/null

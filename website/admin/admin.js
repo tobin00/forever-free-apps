@@ -12,6 +12,10 @@ const accountName = document.querySelector("#account-name");
 const signOutButton = document.querySelector("#sign-out");
 const projectList = document.querySelector("#project-list");
 const template = document.querySelector("#project-template");
+const uploadForm = document.querySelector("#upload-form");
+const uploadStatus = document.querySelector("#upload-status");
+const uploadResult = document.querySelector("#upload-result");
+const uploadedPath = document.querySelector("#uploaded-path");
 let projects = [];
 let accessToken = null;
 
@@ -124,6 +128,39 @@ document.querySelector("#email-form").addEventListener("submit", async (event) =
 
 signOutButton.addEventListener("click", async () => { await client.auth.signOut(); location.replace("./"); });
 document.querySelector("#add-project").addEventListener("click", () => { const card = addCard({ accent: "blue", published: false, featured: false }); card.querySelector('[name="name"]').focus(); });
+
+uploadForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!uploadForm.reportValidity()) return;
+  const button = document.querySelector("#upload-button");
+  const formData = new FormData(uploadForm);
+  formData.set("overwrite", document.querySelector("#upload-overwrite").checked ? "1" : "0");
+  button.disabled = true;
+  uploadResult.hidden = true;
+  setStatus(uploadStatus, "Uploading…");
+  try {
+    const response = await fetch("../api/upload.php", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}`, "X-Ff-Auth": `Bearer ${accessToken}` },
+      body: formData
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "The image could not be uploaded.");
+    uploadedPath.value = data.path;
+    uploadResult.hidden = false;
+    uploadForm.reset();
+    setStatus(uploadStatus, `Uploaded ${data.path}`, "success");
+  } catch (error) {
+    setStatus(uploadStatus, error.message, "error");
+  } finally {
+    button.disabled = false;
+  }
+});
+
+document.querySelector("#copy-upload-path").addEventListener("click", async () => {
+  await navigator.clipboard.writeText(uploadedPath.value);
+  setStatus(uploadStatus, "Path copied.", "success");
+});
 
 document.querySelector("#save").addEventListener("click", async () => {
   const forms = [...projectList.querySelectorAll(".project-editor-card")];
