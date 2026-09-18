@@ -40,8 +40,9 @@ function readCard(card) {
   const value = (name) => card.querySelector(`[name="${name}"]`).value.trim();
   return {
     id: value("id"), name: value("name"), type: value("type"),
-    description: value("description"), url: value("url"), image: value("image"),
-    imageAlt: value("imageAlt"), accent: value("accent"),
+    description: value("description"), url: value("url"), mediaStyle: value("mediaStyle"),
+    image: value("image"), imageAlt: value("imageAlt"), image2: value("image2"),
+    image2Alt: value("image2Alt"), accent: value("accent"),
     published: card.querySelector('[name="published"]').checked,
     featured: card.querySelector('[name="featured"]').checked
   };
@@ -62,8 +63,9 @@ function refreshCards() {
 
 function addCard(project = {}) {
   const card = template.content.firstElementChild.cloneNode(true);
-  const fields = ["id", "name", "type", "description", "url", "image", "imageAlt", "accent"];
+  const fields = ["id", "name", "type", "description", "url", "mediaStyle", "image", "imageAlt", "image2", "image2Alt", "accent"];
   fields.forEach((name) => { if (project[name] != null) card.querySelector(`[name="${name}"]`).value = project[name]; });
+  if (!project.mediaStyle) card.querySelector('[name="mediaStyle"]').value = "cover";
   card.querySelector('[name="published"]').checked = project.published ?? true;
   const featured = card.querySelector('[name="featured"]');
   featured.checked = Boolean(project.featured);
@@ -125,6 +127,11 @@ document.querySelector("#add-project").addEventListener("click", () => { const c
 
 document.querySelector("#save").addEventListener("click", async () => {
   const forms = [...projectList.querySelectorAll(".project-editor-card")];
+  forms.forEach((card) => {
+    const secondImage = card.querySelector('[name="image2"]');
+    const secondAlt = card.querySelector('[name="image2Alt"]');
+    secondAlt.setCustomValidity(secondImage.value.trim() && !secondAlt.value.trim() ? "Describe the second screenshot." : "");
+  });
   if (forms.some((card) => ![...card.querySelectorAll("input, textarea, select")].every((field) => field.checkValidity()))) {
     forms.flatMap((card) => [...card.querySelectorAll("input, textarea, select")]).find((field) => !field.checkValidity())?.reportValidity();
     return;

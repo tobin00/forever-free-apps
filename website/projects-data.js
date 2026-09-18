@@ -8,6 +8,9 @@ const PROJECTS = [
     url: "https://tikipassport.coziahr.com/",
     image: "projects/tiki-passport/cover.png",
     imageAlt: "Tiki Bar Passport home page with expedition log and passport rules",
+    mediaStyle: "cover",
+    image2: "",
+    image2Alt: "",
     accent: "coral",
     featured: true,
     published: true
@@ -20,6 +23,9 @@ const PROJECTS = [
     url: "https://coziahr.com/projects/tikitorch/",
     image: "projects/tiki-torch/cover.webp",
     imageAlt: "A glowing tiki torch beside a moonlit tropical lagoon",
+    mediaStyle: "cover",
+    image2: "",
+    image2Alt: "",
     accent: "gold",
     featured: false,
     published: true
@@ -32,6 +38,9 @@ const PROJECTS = [
     url: "https://coziahr.com/projects/intervaltimer/",
     image: "projects/interval-timer/cover.png",
     imageAlt: "Interval Timer showing workout settings and a large countdown clock",
+    mediaStyle: "cover",
+    image2: "",
+    image2Alt: "",
     accent: "blue",
     featured: false,
     published: true

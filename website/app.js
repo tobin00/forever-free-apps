@@ -3,15 +3,33 @@ function projectCard(project) {
   article.className = `project-card accent-${project.accent}${project.featured ? " project-featured" : ""}`;
 
   const imageLink = document.createElement("a");
-  imageLink.className = "project-visual";
+  const mediaStyle = project.mediaStyle === "phones" ? "phones" : "cover";
+  imageLink.className = `project-visual media-${mediaStyle}`;
   imageLink.href = project.url;
   imageLink.setAttribute("aria-label", `Open ${project.name}`);
-  const image = document.createElement("img");
-  image.src = project.image;
-  image.alt = project.imageAlt;
-  image.loading = project.featured ? "eager" : "lazy";
-  image.decoding = "async";
-  imageLink.appendChild(image);
+  const images = [{ src: project.image, alt: project.imageAlt }];
+  if (mediaStyle === "phones" && project.image2) images.push({ src: project.image2, alt: project.image2Alt || "" });
+  if (mediaStyle === "phones") {
+    const gallery = document.createElement("span");
+    gallery.className = `phone-gallery${images.length === 1 ? " single" : ""}`;
+    images.forEach(({ src, alt }) => {
+      const image = document.createElement("img");
+      image.className = "phone-shot";
+      image.src = src;
+      image.alt = alt;
+      image.loading = project.featured ? "eager" : "lazy";
+      image.decoding = "async";
+      gallery.appendChild(image);
+    });
+    imageLink.appendChild(gallery);
+  } else {
+    const image = document.createElement("img");
+    image.src = project.image;
+    image.alt = project.imageAlt;
+    image.loading = project.featured ? "eager" : "lazy";
+    image.decoding = "async";
+    imageLink.appendChild(image);
+  }
 
   const body = document.createElement("div");
   body.className = "project-body";

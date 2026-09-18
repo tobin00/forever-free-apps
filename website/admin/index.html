@@ -14,7 +14,7 @@
 </head>
 <body>
   <header class="admin-header">
-    <a class="wordmark" href="/"><span aria-hidden="true">∞</span> Forever Free</a>
+    <a class="wordmark" href="/"><span aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 16C12 10 9 8 6 8c-4 0-4 16 0 16 3 0 6-2 10-8 4-6 7-8 10-8 4 0 4 16 0 16-3 0-6-2-10-8Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Forever Free</a>
     <div class="account-actions"><span id="account-name"></span><button class="quiet-button" id="sign-out" type="button" hidden>Sign out</button></div>
   </header>
 
@@ -56,8 +56,11 @@
         <label class="wide">Project URL<input name="url" type="url" required></label>
         <label>Project ID<input name="id" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required></label>
         <label>Accent<select name="accent"><option value="coral">Coral</option><option value="gold">Gold</option><option value="blue">Blue</option></select></label>
-        <label class="wide">Image path<input name="image" required placeholder="projects/example/cover.webp"></label>
-        <label class="wide">Image description<input name="imageAlt" required></label>
+        <label>Media layout<select name="mediaStyle"><option value="cover">Website or landscape image</option><option value="phones">One or two phone screenshots</option></select></label>
+        <label class="wide">Primary image path<input name="image" required placeholder="projects/example/cover.webp"></label>
+        <label class="wide">Primary image description<input name="imageAlt" required></label>
+        <label class="wide">Second phone image path <span class="field-note">Optional</span><input name="image2" placeholder="projects/example/phone-2.webp"></label>
+        <label class="wide">Second phone image description <span class="field-note">Required when a second image is used</span><input name="image2Alt"></label>
       </div>
       <div class="toggles">
         <label><input name="published" type="checkbox"> Published</label>

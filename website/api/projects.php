@@ -22,6 +22,7 @@ function ff_validate_projects(mixed $value): array {
     $required = ['id', 'name', 'type', 'description', 'url', 'image', 'imageAlt', 'accent', 'featured', 'published'];
     $ids = [];
     $featuredCount = 0;
+    $normalized = [];
     foreach ($value as $project) {
         if (!is_array($project)) ff_fail('invalid project', 422);
         foreach ($required as $key) if (!array_key_exists($key, $project)) ff_fail("missing project field: $key", 422);
@@ -33,11 +34,18 @@ function ff_validate_projects(mixed $value): array {
         }
         if (!filter_var($project['url'], FILTER_VALIDATE_URL) || !in_array(parse_url($project['url'], PHP_URL_SCHEME), ['http', 'https'], true)) ff_fail('invalid project URL', 422);
         if (!in_array($project['accent'], ['coral', 'gold', 'blue'], true)) ff_fail('invalid project accent', 422);
+        $project['mediaStyle'] = $project['mediaStyle'] ?? 'cover';
+        $project['image2'] = $project['image2'] ?? '';
+        $project['image2Alt'] = $project['image2Alt'] ?? '';
+        if (!is_string($project['mediaStyle']) || !in_array($project['mediaStyle'], ['cover', 'phones'], true)) ff_fail('invalid project media layout', 422);
+        foreach (['image2', 'image2Alt'] as $key) if (!is_string($project[$key]) || strlen($project[$key]) > 4000) ff_fail("invalid project field: $key", 422);
+        if (trim($project['image2']) !== '' && trim($project['image2Alt']) === '') ff_fail('second image description is required', 422);
         if (!is_bool($project['featured']) || !is_bool($project['published'])) ff_fail('invalid project flags', 422);
         if ($project['featured']) $featuredCount++;
+        $normalized[] = $project;
     }
     if ($featuredCount > 1) ff_fail('only one project can be featured', 422);
-    return array_values($value);
+    return $normalized;
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
